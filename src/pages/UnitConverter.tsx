@@ -1,9 +1,21 @@
 import { useState } from "react";
 import Layout from "@/components/Layout";
-import { ArrowRightLeft } from "lucide-react";
+import { 
+  ArrowRightLeft, 
+  Ruler, 
+  Scale, 
+  Thermometer, 
+  Square, 
+  Box, 
+  Gauge, 
+  Clock,
+  ArrowLeft
+} from "lucide-react";
 
 type UnitCategory = {
   name: string;
+  description: string;
+  icon: React.ElementType;
   units: { name: string; value: string; factor: number }[];
   baseUnit: string;
 };
@@ -11,6 +23,8 @@ type UnitCategory = {
 const unitCategories: Record<string, UnitCategory> = {
   length: {
     name: "Length",
+    description: "Distance and dimensional measurements",
+    icon: Ruler,
     baseUnit: "meter",
     units: [
       { name: "Millimeter", value: "mm", factor: 0.001 },
@@ -24,7 +38,9 @@ const unitCategories: Record<string, UnitCategory> = {
     ],
   },
   weight: {
-    name: "Weight",
+    name: "Mass & Weight",
+    description: "Mass and weight measurements",
+    icon: Scale,
     baseUnit: "kilogram",
     units: [
       { name: "Milligram", value: "mg", factor: 0.000001 },
@@ -38,6 +54,8 @@ const unitCategories: Record<string, UnitCategory> = {
   },
   temperature: {
     name: "Temperature",
+    description: "Thermal measurements",
+    icon: Thermometer,
     baseUnit: "celsius",
     units: [
       { name: "Celsius", value: "°C", factor: 1 },
@@ -47,6 +65,8 @@ const unitCategories: Record<string, UnitCategory> = {
   },
   area: {
     name: "Area",
+    description: "Surface measurements",
+    icon: Square,
     baseUnit: "square meter",
     units: [
       { name: "Sq Millimeter", value: "mm²", factor: 0.000001 },
@@ -61,6 +81,8 @@ const unitCategories: Record<string, UnitCategory> = {
   },
   volume: {
     name: "Volume",
+    description: "Capacity and volume",
+    icon: Box,
     baseUnit: "liter",
     units: [
       { name: "Milliliter", value: "mL", factor: 0.001 },
@@ -74,7 +96,9 @@ const unitCategories: Record<string, UnitCategory> = {
     ],
   },
   speed: {
-    name: "Speed",
+    name: "Speed & Velocity",
+    description: "Rate of motion",
+    icon: Gauge,
     baseUnit: "m/s",
     units: [
       { name: "Meter/second", value: "m/s", factor: 1 },
@@ -86,6 +110,8 @@ const unitCategories: Record<string, UnitCategory> = {
   },
   time: {
     name: "Time",
+    description: "Time duration",
+    icon: Clock,
     baseUnit: "second",
     units: [
       { name: "Millisecond", value: "ms", factor: 0.001 },
@@ -101,33 +127,32 @@ const unitCategories: Record<string, UnitCategory> = {
 };
 
 const UnitConverter = () => {
-  const [selectedCategory, setSelectedCategory] = useState<string>("length");
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [inputValue, setInputValue] = useState<string>("");
-  const [fromUnit, setFromUnit] = useState<string>("m");
-  const [toUnit, setToUnit] = useState<string>("km");
+  const [fromUnit, setFromUnit] = useState<string>("");
+  const [toUnit, setToUnit] = useState<string>("");
 
-  const category = unitCategories[selectedCategory];
+  const category = selectedCategory ? unitCategories[selectedCategory] : null;
 
   const convertTemperature = (value: number, from: string, to: string): number => {
     let celsius: number;
     
-    // Convert to Celsius first
     if (from === "°C") celsius = value;
     else if (from === "°F") celsius = (value - 32) * 5/9;
-    else celsius = value - 273.15; // Kelvin
+    else celsius = value - 273.15;
     
-    // Convert from Celsius to target
     if (to === "°C") return celsius;
     else if (to === "°F") return celsius * 9/5 + 32;
-    else return celsius + 273.15; // Kelvin
+    else return celsius + 273.15;
   };
 
   const convert = (): string => {
+    if (!category) return "";
     const value = parseFloat(inputValue);
     if (isNaN(value)) return "";
 
     if (selectedCategory === "temperature") {
-      return convertTemperature(value, fromUnit, toUnit).toFixed(6);
+      return convertTemperature(value, fromUnit, toUnit).toFixed(6).replace(/\.?0+$/, "");
     }
 
     const fromUnitData = category.units.find((u) => u.value === fromUnit);
@@ -146,7 +171,7 @@ const UnitConverter = () => {
     setToUnit(fromUnit);
   };
 
-  const handleCategoryChange = (cat: string) => {
+  const handleCategorySelect = (cat: string) => {
     setSelectedCategory(cat);
     const units = unitCategories[cat].units;
     setFromUnit(units[0].value);
@@ -154,89 +179,140 @@ const UnitConverter = () => {
     setInputValue("");
   };
 
+  const handleBack = () => {
+    setSelectedCategory(null);
+    setInputValue("");
+  };
+
   return (
     <Layout showBack title="Unit Converter">
-      <div className="max-w-4xl mx-auto">
+      <div className="max-w-6xl mx-auto">
         <div className="text-center mb-8">
           <h1 className="section-title">Unit Converter</h1>
           <p className="section-subtitle">
-            Convert between different units of measurement instantly
+            Search for any unit or select a category below. Convert length, temperature, 
+            volume, mass, and more.
           </p>
         </div>
 
-        {/* Category Tabs */}
-        <div className="flex flex-wrap justify-center gap-2 mb-8">
-          {Object.entries(unitCategories).map(([key, cat]) => (
+        {!selectedCategory ? (
+          /* Category Grid */
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            {Object.entries(unitCategories).map(([key, cat], index) => {
+              const IconComponent = cat.icon;
+              return (
+                <button
+                  key={key}
+                  onClick={() => handleCategorySelect(key)}
+                  className="group converter-card text-left animate-fade-in"
+                  style={{ animationDelay: `${index * 50}ms` }}
+                >
+                  <div className="converter-card-icon">
+                    <IconComponent className="w-6 h-6" />
+                  </div>
+                  <h3 className="font-semibold text-foreground group-hover:text-primary transition-colors mb-1">
+                    {cat.name}
+                  </h3>
+                  <p className="text-sm text-muted-foreground">
+                    {cat.description}
+                  </p>
+                </button>
+              );
+            })}
+          </div>
+        ) : (
+          /* Converter Interface */
+          <div className="animate-fade-in">
             <button
-              key={key}
-              onClick={() => handleCategoryChange(key)}
-              className={`category-tab ${selectedCategory === key ? "active" : ""}`}
+              onClick={handleBack}
+              className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors mb-6"
             >
-              {cat.name}
+              <ArrowLeft className="w-4 h-4" />
+              <span>Back to categories</span>
             </button>
-          ))}
-        </div>
 
-        {/* Converter Card */}
-        <div className="bg-card border border-border rounded-2xl p-6 md:p-8">
-          <div className="grid grid-cols-1 md:grid-cols-[1fr,auto,1fr] gap-4 items-end">
-            {/* From */}
-            <div className="space-y-3">
-              <label className="block text-sm font-medium text-muted-foreground">
-                From
-              </label>
-              <select
-                value={fromUnit}
-                onChange={(e) => setFromUnit(e.target.value)}
-                className="select-field"
-              >
-                {category.units.map((unit) => (
-                  <option key={unit.value} value={unit.value}>
-                    {unit.name} ({unit.value})
-                  </option>
-                ))}
-              </select>
-              <input
-                type="number"
-                value={inputValue}
-                onChange={(e) => setInputValue(e.target.value)}
-                placeholder="Enter value"
-                className="input-field text-xl font-mono"
-              />
-            </div>
+            <div className="bg-card border border-border rounded-2xl p-6 md:p-8">
+              <div className="flex items-center gap-3 mb-6">
+                {category && (
+                  <>
+                    <div className="w-10 h-10 rounded-lg bg-primary/10 border border-primary/30 flex items-center justify-center">
+                      <category.icon className="w-5 h-5 text-primary" />
+                    </div>
+                    <div>
+                      <h2 className="text-xl font-semibold">{category.name}</h2>
+                      <p className="text-sm text-muted-foreground">{category.description}</p>
+                    </div>
+                  </>
+                )}
+              </div>
 
-            {/* Swap Button */}
-            <div className="flex justify-center pb-3">
-              <button
-                onClick={swapUnits}
-                className="w-12 h-12 rounded-full bg-secondary hover:bg-primary/20 flex items-center justify-center transition-colors"
-              >
-                <ArrowRightLeft className="w-5 h-5 text-primary" />
-              </button>
-            </div>
+              <div className="grid grid-cols-1 md:grid-cols-[1fr,auto,1fr] gap-4 items-end">
+                {/* From */}
+                <div className="space-y-3">
+                  <label className="block text-sm font-medium text-muted-foreground">
+                    From
+                  </label>
+                  <select
+                    value={fromUnit}
+                    onChange={(e) => setFromUnit(e.target.value)}
+                    className="select-field"
+                  >
+                    {category?.units.map((unit) => (
+                      <option key={unit.value} value={unit.value}>
+                        {unit.name} ({unit.value})
+                      </option>
+                    ))}
+                  </select>
+                  <input
+                    type="number"
+                    value={inputValue}
+                    onChange={(e) => setInputValue(e.target.value)}
+                    placeholder="Enter value"
+                    className="input-field text-xl font-mono"
+                  />
+                </div>
 
-            {/* To */}
-            <div className="space-y-3">
-              <label className="block text-sm font-medium text-muted-foreground">
-                To
-              </label>
-              <select
-                value={toUnit}
-                onChange={(e) => setToUnit(e.target.value)}
-                className="select-field"
-              >
-                {category.units.map((unit) => (
-                  <option key={unit.value} value={unit.value}>
-                    {unit.name} ({unit.value})
-                  </option>
-                ))}
-              </select>
-              <div className="result-display text-xl">
-                {convert() || "0"}
+                {/* Swap Button */}
+                <div className="flex justify-center pb-3">
+                  <button
+                    onClick={swapUnits}
+                    className="w-12 h-12 rounded-full bg-secondary hover:bg-primary/20 flex items-center justify-center transition-colors"
+                  >
+                    <ArrowRightLeft className="w-5 h-5 text-primary" />
+                  </button>
+                </div>
+
+                {/* To */}
+                <div className="space-y-3">
+                  <label className="block text-sm font-medium text-muted-foreground">
+                    To
+                  </label>
+                  <select
+                    value={toUnit}
+                    onChange={(e) => setToUnit(e.target.value)}
+                    className="select-field"
+                  >
+                    {category?.units.map((unit) => (
+                      <option key={unit.value} value={unit.value}>
+                        {unit.name} ({unit.value})
+                      </option>
+                    ))}
+                  </select>
+                  <div className="result-display text-xl">
+                    {convert() || "0"}
+                  </div>
+                </div>
+              </div>
+
+              {/* Quick conversions hint */}
+              <div className="mt-6 p-4 bg-secondary/30 rounded-lg">
+                <p className="text-sm text-muted-foreground">
+                  💡 Tip: Enter a value and see instant results. Use the swap button to reverse the conversion direction.
+                </p>
               </div>
             </div>
           </div>
-        </div>
+        )}
       </div>
     </Layout>
   );
