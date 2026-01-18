@@ -1,10 +1,9 @@
 import { Link } from "react-router-dom";
 import Layout from "@/components/Layout";
 import { 
-  Ruler, 
+  Calculator, 
   Binary, 
   Image, 
-  Calculator, 
   ArrowRight,
   Shield,
   Zap,
@@ -13,11 +12,11 @@ import {
 
 const converterCategories = [
   {
-    title: "Unit Converter",
-    description: "Length, weight, temperature, area, volume, speed, and time conversions",
-    icon: Ruler,
+    title: "Engineering Unit Converter",
+    description: "Convert length, weight, temperature, pressure, energy, power, torque, and more",
+    icon: Calculator,
     path: "/unit",
-    features: ["Real-time conversion", "7 categories", "Precise results"]
+    features: ["18+ categories", "Real-time results", "Scientific precision"]
   },
   {
     title: "Data Converter",
@@ -32,13 +31,6 @@ const converterCategories = [
     icon: Image,
     path: "/media",
     features: ["Drag & drop", "Fast processing", "Multiple formats"]
-  },
-  {
-    title: "Engineering Converter",
-    description: "Pressure, energy, power, torque, and frequency conversions",
-    icon: Calculator,
-    path: "/engineering",
-    features: ["Scientific precision", "Engineering units", "Instant results"]
   }
 ];
 
@@ -89,7 +81,7 @@ const Index = () => {
       <section className="py-8">
         <h2 className="text-2xl font-bold text-center mb-8">Choose a Converter</h2>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
           {converterCategories.map((category, index) => (
             <Link
               key={category.path}

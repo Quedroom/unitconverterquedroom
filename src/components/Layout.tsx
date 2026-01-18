@@ -83,10 +83,9 @@ const Layout = ({ children, showBack = false, title }: LayoutProps) => {
             </p>
             <nav className="flex items-center gap-6">
               <Link to="/" className={`nav-link ${isHome ? 'active' : ''}`}>Home</Link>
-              <Link to="/unit" className={`nav-link ${location.pathname === '/unit' ? 'active' : ''}`}>Units</Link>
+              <Link to="/unit" className={`nav-link ${location.pathname === '/unit' || location.pathname === '/engineering' ? 'active' : ''}`}>Units</Link>
               <Link to="/data" className={`nav-link ${location.pathname === '/data' ? 'active' : ''}`}>Data</Link>
               <Link to="/media" className={`nav-link ${location.pathname === '/media' ? 'active' : ''}`}>Media</Link>
-              <Link to="/engineering" className={`nav-link ${location.pathname === '/engineering' ? 'active' : ''}`}>Engineering</Link>
             </nav>
           </div>
         </div>
