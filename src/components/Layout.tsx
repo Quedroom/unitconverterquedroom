@@ -13,6 +13,38 @@ const Layout = ({ children, showBack = false, title }: LayoutProps) => {
 
   return (
     <div className="min-h-screen bg-background">
+      {/* Top Navigation */}
+      <nav className="bg-card border-b border-border">
+        <div className="container mx-auto px-4">
+          <div className="flex items-center justify-center gap-8 py-3">
+            <Link 
+              to="/" 
+              className={`text-sm font-medium transition-colors hover:text-primary ${isHome ? 'text-primary' : 'text-muted-foreground'}`}
+            >
+              Home
+            </Link>
+            <Link 
+              to="/unit" 
+              className={`text-sm font-medium transition-colors hover:text-primary ${location.pathname === '/unit' || location.pathname === '/engineering' ? 'text-primary' : 'text-muted-foreground'}`}
+            >
+              Units
+            </Link>
+            <Link 
+              to="/data" 
+              className={`text-sm font-medium transition-colors hover:text-primary ${location.pathname === '/data' ? 'text-primary' : 'text-muted-foreground'}`}
+            >
+              Data
+            </Link>
+            <Link 
+              to="/media" 
+              className={`text-sm font-medium transition-colors hover:text-primary ${location.pathname === '/media' ? 'text-primary' : 'text-muted-foreground'}`}
+            >
+              Media
+            </Link>
+          </div>
+        </div>
+      </nav>
+
       {/* Header */}
       <header className="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container mx-auto px-4 py-4">
