@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Layout from "@/components/Layout";
+import EngineeringFormulas from "@/components/EngineeringFormulas";
 import { 
   ArrowRightLeft, 
   Ruler, 
@@ -21,7 +22,8 @@ import {
   Activity,
   Waves,
   RotateCw,
-  Search
+  Search,
+  Calculator
 } from "lucide-react";
 
 type UnitCategory = {
@@ -279,6 +281,7 @@ const EngineeringUnitConverter = () => {
   const [fromUnit, setFromUnit] = useState<string>("");
   const [toUnit, setToUnit] = useState<string>("");
   const [searchQuery, setSearchQuery] = useState<string>("");
+  const [showFormulas, setShowFormulas] = useState<boolean>(false);
 
   const category = selectedCategory ? allCategories[selectedCategory] : null;
 
@@ -350,8 +353,23 @@ const EngineeringUnitConverter = () => {
           </p>
         </div>
 
-        {!selectedCategory ? (
+        {showFormulas ? (
+          <EngineeringFormulas onBack={() => setShowFormulas(false)} />
+        ) : !selectedCategory ? (
           <>
+            {/* Engineering Formulas Button */}
+            <div className="max-w-xl mx-auto mb-6">
+              <button
+                onClick={() => setShowFormulas(true)}
+                className="w-full flex items-center justify-center gap-3 py-4 px-6 bg-primary/10 border-2 border-primary/30 rounded-xl hover:bg-primary/20 hover:border-primary/50 transition-all group"
+              >
+                <Calculator className="w-5 h-5 text-primary" />
+                <span className="font-semibold text-foreground group-hover:text-primary transition-colors">
+                  Engineering Formula Calculator
+                </span>
+              </button>
+            </div>
+
             {/* Search Bar */}
             <div className="max-w-xl mx-auto mb-8">
               <div className="relative">
