@@ -7,7 +7,8 @@ import {
   ArrowRight,
   Shield,
   Zap,
-  Lock
+  Lock,
+  FlaskConical
 } from "lucide-react";
 
 const converterCategories = [
@@ -17,6 +18,13 @@ const converterCategories = [
     icon: Calculator,
     path: "/unit",
     features: ["18+ categories", "Real-time results", "Scientific precision"]
+  },
+  {
+    title: "Scientific Calculator",
+    description: "Advanced calculator with trigonometric, logarithmic, and scientific functions",
+    icon: FlaskConical,
+    path: "/calculator",
+    features: ["Trig functions", "Memory storage", "RAD/DEG modes"]
   },
   {
     title: "Data Converter",
