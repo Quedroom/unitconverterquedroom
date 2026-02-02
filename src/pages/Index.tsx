@@ -10,7 +10,8 @@ import {
   Zap,
   Lock,
   FlaskConical,
-  Search
+  Search,
+  Coins
 } from "lucide-react";
 
 const converterCategories = [
@@ -27,6 +28,13 @@ const converterCategories = [
     icon: FlaskConical,
     path: "/calculator",
     features: ["Trig functions", "Memory storage", "RAD/DEG modes"]
+  },
+  {
+    title: "Currency Converter",
+    description: "Convert between 40+ world currencies including USD, EUR, GBP, INR, and more",
+    icon: Coins,
+    path: "/currency",
+    features: ["40+ currencies", "Quick amounts", "Swap currencies"]
   },
   {
     title: "Data Converter",
