@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import Layout from "@/components/Layout";
 import { 
@@ -8,7 +9,8 @@ import {
   Shield,
   Zap,
   Lock,
-  FlaskConical
+  FlaskConical,
+  Search
 } from "lucide-react";
 
 const converterCategories = [
@@ -43,6 +45,17 @@ const converterCategories = [
 ];
 
 const Index = () => {
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const filteredCategories = converterCategories.filter((category) => {
+    const query = searchQuery.toLowerCase();
+    return (
+      category.title.toLowerCase().includes(query) ||
+      category.description.toLowerCase().includes(query) ||
+      category.features.some((f) => f.toLowerCase().includes(query))
+    );
+  });
+
   return (
     <Layout>
       {/* Hero Section */}
@@ -62,6 +75,20 @@ const Index = () => {
           Free, fast and privacy-focused conversion tools. Convert units, data, and media 
           instantly — all in your browser with zero data storage.
         </p>
+
+        {/* Search Bar */}
+        <div className="max-w-md mx-auto mb-8">
+          <div className="relative">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+            <input
+              type="text"
+              placeholder="Search converters..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full pl-12 pr-4 py-3 rounded-xl bg-card border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all"
+            />
+          </div>
+        </div>
 
         <div className="flex flex-wrap justify-center gap-8 mb-12">
           <div className="flex items-center gap-2">
@@ -89,44 +116,50 @@ const Index = () => {
       <section className="py-8">
         <h2 className="text-2xl font-bold text-center mb-8">Choose a Converter</h2>
         
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
-          {converterCategories.map((category, index) => (
-            <Link
-              key={category.path}
-              to={category.path}
-              className="group converter-card animate-fade-in"
-              style={{ animationDelay: `${index * 100}ms` }}
-            >
-              <div className="converter-card-icon">
-                <category.icon className="w-6 h-6" />
-              </div>
-              
-              <h3 className="text-xl font-semibold mb-2 group-hover:text-primary transition-colors">
-                {category.title}
-              </h3>
-              
-              <p className="text-muted-foreground mb-4">
-                {category.description}
-              </p>
-              
-              <div className="flex flex-wrap gap-2 mb-4">
-                {category.features.map((feature) => (
-                  <span 
-                    key={feature}
-                    className="text-xs bg-secondary px-2 py-1 rounded-md text-muted-foreground"
-                  >
-                    {feature}
-                  </span>
-                ))}
-              </div>
-              
-              <div className="flex items-center gap-2 text-primary font-medium">
-                <span>Start Converting</span>
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-              </div>
-            </Link>
-          ))}
-        </div>
+        {filteredCategories.length === 0 ? (
+          <div className="text-center text-muted-foreground py-12">
+            <p>No converters found matching "{searchQuery}"</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+            {filteredCategories.map((category, index) => (
+              <Link
+                key={category.path}
+                to={category.path}
+                className="group converter-card animate-fade-in"
+                style={{ animationDelay: `${index * 100}ms` }}
+              >
+                <div className="converter-card-icon">
+                  <category.icon className="w-6 h-6" />
+                </div>
+                
+                <h3 className="text-xl font-semibold mb-2 group-hover:text-primary transition-colors">
+                  {category.title}
+                </h3>
+                
+                <p className="text-muted-foreground mb-4">
+                  {category.description}
+                </p>
+                
+                <div className="flex flex-wrap gap-2 mb-4">
+                  {category.features.map((feature) => (
+                    <span 
+                      key={feature}
+                      className="text-xs bg-secondary px-2 py-1 rounded-md text-muted-foreground"
+                    >
+                      {feature}
+                    </span>
+                  ))}
+                </div>
+                
+                <div className="flex items-center gap-2 text-primary font-medium">
+                  <span>Start Converting</span>
+                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                </div>
+              </Link>
+            ))}
+          </div>
+        )}
       </section>
 
       {/* Trust Section */}
