@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import Layout from "@/components/Layout";
 import EngineeringFormulas from "@/components/EngineeringFormulas";
 import { 
@@ -282,6 +282,23 @@ const EngineeringUnitConverter = () => {
   const [toUnit, setToUnit] = useState<string>("");
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [showFormulas, setShowFormulas] = useState<boolean>(false);
+  const searchInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === "k") {
+        e.preventDefault();
+        searchInputRef.current?.focus();
+      }
+      if (e.key === "/" && !["INPUT", "TEXTAREA"].includes((e.target as HTMLElement).tagName)) {
+        e.preventDefault();
+        searchInputRef.current?.focus();
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, []);
 
   const category = selectedCategory ? allCategories[selectedCategory] : null;
 
@@ -375,12 +392,18 @@ const EngineeringUnitConverter = () => {
               <div className="relative">
                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
                 <input
+                  ref={searchInputRef}
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Search units... (e.g., 'psi', 'meter', 'temperature')"
-                  className="input-field pl-12"
+                  className="input-field pl-12 pr-20"
                 />
+                <div className="absolute right-3 top-1/2 -translate-y-1/2 hidden sm:flex items-center gap-1">
+                  <kbd className="px-2 py-1 text-xs font-mono bg-muted border border-border rounded text-muted-foreground">
+                    Ctrl+K
+                  </kbd>
+                </div>
               </div>
             </div>
 
