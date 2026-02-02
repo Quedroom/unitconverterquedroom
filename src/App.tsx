@@ -8,6 +8,7 @@ import EngineeringUnitConverter from "./pages/EngineeringUnitConverter";
 import DataConverter from "./pages/DataConverter";
 import MediaConverter from "./pages/MediaConverter";
 import ScientificCalculator from "./pages/ScientificCalculator";
+import CurrencyConverter from "./pages/CurrencyConverter";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -23,6 +24,7 @@ const App = () => (
           <Route path="/unit" element={<EngineeringUnitConverter />} />
           <Route path="/engineering" element={<EngineeringUnitConverter />} />
           <Route path="/calculator" element={<ScientificCalculator />} />
+          <Route path="/currency" element={<CurrencyConverter />} />
           <Route path="/data" element={<DataConverter />} />
           <Route path="/media" element={<MediaConverter />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
