@@ -4,64 +4,133 @@ import { Delete, RotateCcw } from "lucide-react";
 
 const ScientificCalculator = () => {
   const [display, setDisplay] = useState("0");
-  const [equation, setEquation] = useState("");
-  const [isNewNumber, setIsNewNumber] = useState(true);
   const [memory, setMemory] = useState<number>(0);
   const [isRadians, setIsRadians] = useState(true);
 
   const handleNumber = (num: string) => {
-    if (isNewNumber) {
+    if (display === "0") {
       setDisplay(num);
-      setIsNewNumber(false);
     } else {
-      setDisplay(display === "0" ? num : display + num);
+      setDisplay(display + num);
     }
   };
 
   const handleDecimal = () => {
-    if (isNewNumber) {
-      setDisplay("0.");
-      setIsNewNumber(false);
-    } else if (!display.includes(".")) {
+    // Find the last number in the expression
+    const lastNumber = display.split(/[\+\-\×\÷\(\)\^]/).pop() || "";
+    if (!lastNumber.includes(".")) {
       setDisplay(display + ".");
     }
   };
 
   const handleOperator = (op: string) => {
-    setEquation(display + " " + op + " ");
-    setIsNewNumber(true);
+    setDisplay(display + op);
+  };
+
+  const handleFunction = (func: string) => {
+    if (display === "0") {
+      setDisplay(func + "(");
+    } else {
+      setDisplay(display + func + "(");
+    }
+  };
+
+  const handleParenthesis = (paren: string) => {
+    if (paren === "(") {
+      if (display === "0") {
+        setDisplay("(");
+      } else {
+        setDisplay(display + "(");
+      }
+    } else {
+      setDisplay(display + ")");
+    }
+  };
+
+  const evaluateExpression = (expr: string): number => {
+    // Replace display operators with JS operators
+    let evalExpr = expr
+      .replace(/×/g, "*")
+      .replace(/÷/g, "/")
+      .replace(/\^/g, "**");
+
+    // Handle trig functions with degree/radian conversion
+    const trigFuncs = ["sin", "cos", "tan", "asin", "acos", "atan"];
+    
+    trigFuncs.forEach((func) => {
+      const regex = new RegExp(`${func}\\(([^)]+)\\)`, "g");
+      evalExpr = evalExpr.replace(regex, (match, arg) => {
+        const value = evaluateExpression(arg);
+        let result: number;
+        
+        if (func === "sin") {
+          result = isRadians ? Math.sin(value) : Math.sin((value * Math.PI) / 180);
+        } else if (func === "cos") {
+          result = isRadians ? Math.cos(value) : Math.cos((value * Math.PI) / 180);
+        } else if (func === "tan") {
+          result = isRadians ? Math.tan(value) : Math.tan((value * Math.PI) / 180);
+        } else if (func === "asin") {
+          result = isRadians ? Math.asin(value) : (Math.asin(value) * 180) / Math.PI;
+        } else if (func === "acos") {
+          result = isRadians ? Math.acos(value) : (Math.acos(value) * 180) / Math.PI;
+        } else if (func === "atan") {
+          result = isRadians ? Math.atan(value) : (Math.atan(value) * 180) / Math.PI;
+        } else {
+          result = value;
+        }
+        return String(result);
+      });
+    });
+
+    // Handle other functions
+    evalExpr = evalExpr.replace(/sqrt\(([^)]+)\)/g, (_, arg) => String(Math.sqrt(evaluateExpression(arg))));
+    evalExpr = evalExpr.replace(/cbrt\(([^)]+)\)/g, (_, arg) => String(Math.cbrt(evaluateExpression(arg))));
+    evalExpr = evalExpr.replace(/log\(([^)]+)\)/g, (_, arg) => String(Math.log10(evaluateExpression(arg))));
+    evalExpr = evalExpr.replace(/ln\(([^)]+)\)/g, (_, arg) => String(Math.log(evaluateExpression(arg))));
+    evalExpr = evalExpr.replace(/abs\(([^)]+)\)/g, (_, arg) => String(Math.abs(evaluateExpression(arg))));
+    evalExpr = evalExpr.replace(/exp\(([^)]+)\)/g, (_, arg) => String(Math.exp(evaluateExpression(arg))));
+
+    // Replace constants
+    evalExpr = evalExpr.replace(/π/g, String(Math.PI));
+    evalExpr = evalExpr.replace(/e(?![x])/g, String(Math.E));
+
+    try {
+      return eval(evalExpr);
+    } catch {
+      return NaN;
+    }
   };
 
   const handleEquals = () => {
     try {
-      const fullEquation = equation + display;
-      // Replace operators for eval
-      const evalEquation = fullEquation
-        .replace(/×/g, "*")
-        .replace(/÷/g, "/")
-        .replace(/\^/g, "**");
-      const result = eval(evalEquation);
-      setDisplay(String(parseFloat(result.toPrecision(12))));
-      setEquation("");
-      setIsNewNumber(true);
+      const result = evaluateExpression(display);
+      if (isNaN(result) || !isFinite(result)) {
+        setDisplay("Error");
+      } else {
+        setDisplay(String(parseFloat(result.toPrecision(12))));
+      }
     } catch {
       setDisplay("Error");
-      setIsNewNumber(true);
     }
   };
 
   const handleClear = () => {
     setDisplay("0");
-    setEquation("");
-    setIsNewNumber(true);
   };
 
   const handleBackspace = () => {
     if (display.length > 1) {
+      // Check if we need to remove a function name
+      const funcs = ["sin", "cos", "tan", "asin", "acos", "atan", "sqrt", "cbrt", "log", "ln", "abs", "exp"];
+      for (const func of funcs) {
+        if (display.endsWith(func + "(")) {
+          setDisplay(display.slice(0, -(func.length + 1)) || "0");
+          return;
+        }
+      }
       setDisplay(display.slice(0, -1));
     } else {
       setDisplay("0");
-      setIsNewNumber(true);
     }
   };
 
@@ -70,60 +139,30 @@ const ScientificCalculator = () => {
     let result: number;
 
     switch (func) {
-      case "sin":
-        result = isRadians ? Math.sin(num) : Math.sin((num * Math.PI) / 180);
-        break;
-      case "cos":
-        result = isRadians ? Math.cos(num) : Math.cos((num * Math.PI) / 180);
-        break;
-      case "tan":
-        result = isRadians ? Math.tan(num) : Math.tan((num * Math.PI) / 180);
-        break;
-      case "asin":
-        result = isRadians ? Math.asin(num) : (Math.asin(num) * 180) / Math.PI;
-        break;
-      case "acos":
-        result = isRadians ? Math.acos(num) : (Math.acos(num) * 180) / Math.PI;
-        break;
-      case "atan":
-        result = isRadians ? Math.atan(num) : (Math.atan(num) * 180) / Math.PI;
-        break;
-      case "log":
-        result = Math.log10(num);
-        break;
-      case "ln":
-        result = Math.log(num);
-        break;
-      case "sqrt":
-        result = Math.sqrt(num);
-        break;
-      case "cbrt":
-        result = Math.cbrt(num);
-        break;
       case "square":
-        result = num * num;
-        break;
+        setDisplay(display + "^2");
+        return;
       case "cube":
-        result = num * num * num;
-        break;
+        setDisplay(display + "^3");
+        return;
       case "reciprocal":
         result = 1 / num;
         break;
       case "factorial":
         result = factorial(num);
         break;
-      case "abs":
-        result = Math.abs(num);
-        break;
-      case "exp":
-        result = Math.exp(num);
-        break;
       case "10^x":
         result = Math.pow(10, num);
         break;
       case "negate":
-        result = -num;
-        break;
+        if (display === "0") return;
+        // Toggle negative sign
+        if (display.startsWith("-")) {
+          setDisplay(display.slice(1));
+        } else {
+          setDisplay("-" + display);
+        }
+        return;
       case "percent":
         result = num / 100;
         break;
@@ -132,7 +171,6 @@ const ScientificCalculator = () => {
     }
 
     setDisplay(String(parseFloat(result.toPrecision(12))));
-    setIsNewNumber(true);
   };
 
   const factorial = (n: number): number => {
@@ -144,15 +182,11 @@ const ScientificCalculator = () => {
   };
 
   const handleConstant = (constant: string) => {
-    switch (constant) {
-      case "pi":
-        setDisplay(String(Math.PI));
-        break;
-      case "e":
-        setDisplay(String(Math.E));
-        break;
+    if (display === "0") {
+      setDisplay(constant);
+    } else {
+      setDisplay(display + constant);
     }
-    setIsNewNumber(true);
   };
 
   const handleMemory = (action: string) => {
@@ -162,16 +196,17 @@ const ScientificCalculator = () => {
         setMemory(0);
         break;
       case "MR":
-        setDisplay(String(memory));
-        setIsNewNumber(true);
+        if (display === "0") {
+          setDisplay(String(memory));
+        } else {
+          setDisplay(display + memory);
+        }
         break;
       case "M+":
         setMemory(memory + num);
-        setIsNewNumber(true);
         break;
       case "M-":
         setMemory(memory - num);
-        setIsNewNumber(true);
         break;
     }
   };
@@ -220,10 +255,7 @@ const ScientificCalculator = () => {
         <div className="bg-card border border-border rounded-2xl p-6">
           {/* Display */}
           <div className="bg-background border border-border rounded-xl p-4 mb-4">
-            <div className="text-right text-sm text-muted-foreground h-5 overflow-hidden">
-              {equation}
-            </div>
-            <div className="text-right text-3xl font-mono font-bold text-foreground overflow-x-auto">
+            <div className="text-right text-3xl font-mono font-bold text-foreground overflow-x-auto whitespace-nowrap">
               {display}
             </div>
           </div>
@@ -231,16 +263,6 @@ const ScientificCalculator = () => {
           {/* Mode Toggle */}
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
-              <button
-                onClick={() => setIsRadians(true)}
-                className={`px-3 py-1 rounded-lg text-xs font-medium transition-colors ${
-                  isRadians
-                    ? "bg-primary text-primary-foreground"
-                    : "bg-secondary text-muted-foreground"
-                }`}
-              >
-                RAD
-              </button>
               <button
                 onClick={() => setIsRadians(false)}
                 className={`px-3 py-1 rounded-lg text-xs font-medium transition-colors ${
@@ -250,6 +272,16 @@ const ScientificCalculator = () => {
                 }`}
               >
                 DEG
+              </button>
+              <button
+                onClick={() => setIsRadians(true)}
+                className={`px-3 py-1 rounded-lg text-xs font-medium transition-colors ${
+                  isRadians
+                    ? "bg-primary text-primary-foreground"
+                    : "bg-secondary text-muted-foreground"
+                }`}
+              >
+                RAD
               </button>
             </div>
             <div className="flex items-center gap-2 text-xs text-muted-foreground">
@@ -275,77 +307,77 @@ const ScientificCalculator = () => {
 
           {/* Scientific Functions Row 1 */}
           <div className="grid grid-cols-5 gap-2 mb-2">
-            <Button variant="function" onClick={() => handleScientific("sin")}>
+            <Button variant="function" onClick={() => handleFunction("sin")}>
               sin
             </Button>
-            <Button variant="function" onClick={() => handleScientific("cos")}>
+            <Button variant="function" onClick={() => handleFunction("cos")}>
               cos
             </Button>
-            <Button variant="function" onClick={() => handleScientific("tan")}>
+            <Button variant="function" onClick={() => handleFunction("tan")}>
               tan
             </Button>
-            <Button variant="function" onClick={() => handleScientific("log")}>
-              log
+            <Button variant="function" onClick={() => handleConstant("π")}>
+              π
             </Button>
-            <Button variant="function" onClick={() => handleScientific("ln")}>
-              ln
+            <Button variant="function" onClick={() => handleConstant("e")}>
+              e
             </Button>
           </div>
 
           {/* Scientific Functions Row 2 */}
           <div className="grid grid-cols-5 gap-2 mb-2">
-            <Button variant="function" onClick={() => handleScientific("asin")}>
+            <Button variant="function" onClick={() => handleFunction("asin")}>
               sin⁻¹
             </Button>
-            <Button variant="function" onClick={() => handleScientific("acos")}>
+            <Button variant="function" onClick={() => handleFunction("acos")}>
               cos⁻¹
             </Button>
-            <Button variant="function" onClick={() => handleScientific("atan")}>
+            <Button variant="function" onClick={() => handleFunction("atan")}>
               tan⁻¹
             </Button>
-            <Button variant="function" onClick={() => handleScientific("exp")}>
-              eˣ
+            <Button variant="function" onClick={() => handleFunction("ln")}>
+              ln
             </Button>
-            <Button variant="function" onClick={() => handleScientific("10^x")}>
-              10ˣ
+            <Button variant="function" onClick={() => handleFunction("log")}>
+              log
             </Button>
           </div>
 
           {/* Scientific Functions Row 3 */}
           <div className="grid grid-cols-5 gap-2 mb-2">
-            <Button variant="function" onClick={() => handleScientific("sqrt")}>
-              √
-            </Button>
-            <Button variant="function" onClick={() => handleScientific("cbrt")}>
-              ³√
+            <Button variant="operator" onClick={() => handleOperator("^")}>
+              xʸ
             </Button>
             <Button variant="function" onClick={() => handleScientific("square")}>
               x²
             </Button>
-            <Button variant="function" onClick={() => handleScientific("cube")}>
-              x³
+            <Button variant="function" onClick={() => handleFunction("sqrt")}>
+              √x
             </Button>
-            <Button variant="function" onClick={() => handleOperator("^")}>
-              xʸ
+            <Button variant="function" onClick={() => handleFunction("cbrt")}>
+              ³√x
+            </Button>
+            <Button variant="function" onClick={() => handleScientific("factorial")}>
+              n!
             </Button>
           </div>
 
           {/* Scientific Functions Row 4 */}
           <div className="grid grid-cols-5 gap-2 mb-4">
-            <Button variant="function" onClick={() => handleScientific("factorial")}>
-              n!
+            <Button variant="function" onClick={() => handleParenthesis("(")}>
+              (
+            </Button>
+            <Button variant="function" onClick={() => handleParenthesis(")")}>
+              )
+            </Button>
+            <Button variant="function" onClick={() => handleFunction("exp")}>
+              eˣ
+            </Button>
+            <Button variant="function" onClick={() => handleScientific("10^x")}>
+              10ˣ
             </Button>
             <Button variant="function" onClick={() => handleScientific("reciprocal")}>
               1/x
-            </Button>
-            <Button variant="function" onClick={() => handleScientific("abs")}>
-              |x|
-            </Button>
-            <Button variant="function" onClick={() => handleConstant("pi")}>
-              π
-            </Button>
-            <Button variant="function" onClick={() => handleConstant("e")}>
-              e
             </Button>
           </div>
 
