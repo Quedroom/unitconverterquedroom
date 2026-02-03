@@ -15,7 +15,7 @@ const currencies: Currency[] = [
   { code: "USD", name: "US Dollar", symbol: "$", flag: "🇺🇸", rateToUSD: 1 },
   { code: "EUR", name: "Euro", symbol: "€", flag: "🇪🇺", rateToUSD: 0.96 },
   { code: "GBP", name: "British Pound", symbol: "£", flag: "🇬🇧", rateToUSD: 0.80 },
-  { code: "INR", name: "Indian Rupee", symbol: "₹", flag: "🇮🇳", rateToUSD: 86.50 },
+  { code: "INR", name: "Indian Rupee", symbol: "₹", flag: "🇮🇳", rateToUSD: 90.48 },
   { code: "JPY", name: "Japanese Yen", symbol: "¥", flag: "🇯🇵", rateToUSD: 154.80 },
   { code: "CNY", name: "Chinese Yuan", symbol: "¥", flag: "🇨🇳", rateToUSD: 7.28 },
   { code: "AUD", name: "Australian Dollar", symbol: "A$", flag: "🇦🇺", rateToUSD: 1.60 },
