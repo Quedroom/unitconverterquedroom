@@ -1,6 +1,8 @@
 import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import Layout from "@/components/Layout";
+import FAQSection from "@/components/FAQSection";
+import SchemaMarkup from "@/components/SchemaMarkup";
 import { 
   Calculator, 
   Binary, 
@@ -75,6 +77,7 @@ const Index = () => {
 
   return (
     <Layout>
+      <SchemaMarkup />
       {/* Hero Section */}
       <section className="text-center py-12 md:py-20">
         <div className="inline-flex items-center gap-2 bg-primary/10 border border-primary/30 rounded-full px-4 py-2 mb-6">
@@ -184,6 +187,9 @@ const Index = () => {
           </div>
         )}
       </section>
+
+      {/* FAQ Section */}
+      <FAQSection />
 
       {/* Trust Section */}
       <section className="py-16 text-center">
