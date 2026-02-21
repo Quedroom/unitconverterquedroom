@@ -1,5 +1,6 @@
 import { useState, useCallback, useRef } from "react";
 import Layout from "@/components/Layout";
+import PageSEO from "@/components/PageSEO";
 import { Upload, Download, X, Image as ImageIcon, Check } from "lucide-react";
 
 type ImageFormat = "image/jpeg" | "image/png" | "image/webp";
@@ -136,6 +137,21 @@ const MediaConverter = () => {
 
   return (
     <Layout showBack title="Media Converter">
+      <PageSEO
+        title="Image Converter – JPG, PNG, WebP | ConvertHub"
+        description="Convert images between JPG, PNG, and WebP formats free online. Client-side processing with adjustable quality — nothing uploaded to any server."
+        path="/media"
+        schemaData={{
+          "@context": "https://schema.org",
+          "@type": "WebApplication",
+          name: "Image Format Converter",
+          url: "https://unitconverterquedroom.lovable.app/media",
+          description: "Convert images between JPG, PNG, and WebP formats entirely in your browser with adjustable quality settings.",
+          applicationCategory: "UtilitiesApplication",
+          operatingSystem: "Any",
+          offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+        }}
+      />
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-8">
           <h1 className="section-title">Image Converter</h1>

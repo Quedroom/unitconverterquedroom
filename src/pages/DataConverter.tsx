@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Layout from "@/components/Layout";
+import PageSEO from "@/components/PageSEO";
 import { Copy, Check, ArrowRightLeft } from "lucide-react";
 
 type ConverterType = "binary-decimal" | "decimal-hex" | "text-base64" | "csv-json";
@@ -107,6 +108,21 @@ const DataConverter = () => {
 
   return (
     <Layout showBack title="Data Converter">
+      <PageSEO
+        title="Data Converter – Binary, Hex, Base64, CSV/JSON | ConvertHub"
+        description="Convert between binary, decimal, hexadecimal, Base64, CSV and JSON formats instantly. Free online data converter with zero data storage."
+        path="/data"
+        schemaData={{
+          "@context": "https://schema.org",
+          "@type": "WebApplication",
+          name: "Data Format Converter",
+          url: "https://unitconverterquedroom.lovable.app/data",
+          description: "Convert between binary, decimal, hexadecimal, Base64, CSV and JSON formats instantly in your browser.",
+          applicationCategory: "UtilitiesApplication",
+          operatingSystem: "Any",
+          offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+        }}
+      />
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-8">
           <h1 className="section-title">Data Converter</h1>
