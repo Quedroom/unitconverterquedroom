@@ -1,6 +1,7 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import Layout from "@/components/Layout";
 import EngineeringFormulas from "@/components/EngineeringFormulas";
+import PageSEO from "@/components/PageSEO";
 import { 
   ArrowRightLeft, 
   Ruler, 
@@ -361,6 +362,21 @@ const EngineeringUnitConverter = () => {
 
   return (
     <Layout showBack title="Engineering Unit Converter">
+      <PageSEO
+        title="Engineering Unit Converter – 18+ Categories | ConvertHub"
+        description="Convert engineering units across 18+ categories: length, mass, temperature, pressure, energy, power, and more. Free, fast, and private."
+        path="/unit"
+        schemaData={{
+          "@context": "https://schema.org",
+          "@type": "WebApplication",
+          name: "Engineering Unit Converter",
+          url: "https://unitconverterquedroom.lovable.app/unit",
+          description: "Convert engineering units across 18+ categories including length, mass, temperature, pressure, energy, and more.",
+          applicationCategory: "UtilitiesApplication",
+          operatingSystem: "Any",
+          offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+        }}
+      />
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-8">
           <h1 className="section-title">Engineering Unit Converter</h1>

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Layout from "@/components/Layout";
+import PageSEO from "@/components/PageSEO";
 import { Delete, RotateCcw } from "lucide-react";
 
 const ScientificCalculator = () => {
@@ -244,6 +245,21 @@ const ScientificCalculator = () => {
 
   return (
     <Layout showBack title="Scientific Calculator">
+      <PageSEO
+        title="Scientific Calculator – Trig, Log, Powers | ConvertHub"
+        description="Free online scientific calculator with trigonometric, logarithmic, and power functions. Supports radians and degrees — runs entirely in your browser."
+        path="/calculator"
+        schemaData={{
+          "@context": "https://schema.org",
+          "@type": "WebApplication",
+          name: "Scientific Calculator",
+          url: "https://unitconverterquedroom.lovable.app/calculator",
+          description: "Free online scientific calculator with trigonometric, logarithmic, and power functions.",
+          applicationCategory: "UtilitiesApplication",
+          operatingSystem: "Any",
+          offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+        }}
+      />
       <div className="max-w-lg mx-auto">
         <div className="text-center mb-6">
           <h1 className="section-title">Scientific Calculator</h1>
