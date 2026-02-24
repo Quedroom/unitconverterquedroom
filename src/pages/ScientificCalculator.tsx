@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { evaluate as mathEvaluate } from "mathjs";
 import Layout from "@/components/Layout";
 import PageSEO from "@/components/PageSEO";
 import { Delete, RotateCcw } from "lucide-react";
@@ -96,7 +97,7 @@ const ScientificCalculator = () => {
     evalExpr = evalExpr.replace(/e(?![x])/g, String(Math.E));
 
     try {
-      return eval(evalExpr);
+      return mathEvaluate(evalExpr);
     } catch {
       return NaN;
     }
