@@ -58,6 +58,17 @@ const ChartContainer = React.forwardRef<
 });
 ChartContainer.displayName = "Chart";
 
+// Sanitize a CSS value to prevent injection
+function sanitizeCssValue(value: string): string {
+  // Allow only safe CSS color values: hex, rgb/rgba/hsl/hsla, named colors, css variables
+  return value.replace(/[^a-zA-Z0-9#(),.\s%\-\/]/g, "");
+}
+
+// Sanitize a CSS custom property name
+function sanitizeCssKey(key: string): string {
+  return key.replace(/[^a-zA-Z0-9\-_]/g, "");
+}
+
 const ChartStyle = ({ id, config }: { id: string; config: ChartConfig }) => {
   const colorConfig = Object.entries(config).filter(([_, config]) => config.theme || config.color);
 
@@ -65,26 +76,22 @@ const ChartStyle = ({ id, config }: { id: string; config: ChartConfig }) => {
     return null;
   }
 
-  return (
-    <style
-      dangerouslySetInnerHTML={{
-        __html: Object.entries(THEMES)
-          .map(
-            ([theme, prefix]) => `
-${prefix} [data-chart=${id}] {
-${colorConfig
-  .map(([key, itemConfig]) => {
-    const color = itemConfig.theme?.[theme as keyof typeof itemConfig.theme] || itemConfig.color;
-    return color ? `  --color-${key}: ${color};` : null;
-  })
-  .join("\n")}
-}
-`,
-          )
-          .join("\n"),
-      }}
-    />
-  );
+  const cssText = Object.entries(THEMES)
+    .map(([theme, prefix]) => {
+      const sanitizedPrefix = sanitizeCssValue(prefix);
+      const sanitizedId = sanitizeCssKey(id);
+      const vars = colorConfig
+        .map(([key, itemConfig]) => {
+          const color = itemConfig.theme?.[theme as keyof typeof itemConfig.theme] || itemConfig.color;
+          return color ? `  --color-${sanitizeCssKey(key)}: ${sanitizeCssValue(color)};` : null;
+        })
+        .filter(Boolean)
+        .join("\n");
+      return `${sanitizedPrefix} [data-chart=${sanitizedId}] {\n${vars}\n}`;
+    })
+    .join("\n");
+
+  return <style ref={(el) => { if (el) el.textContent = cssText; }} />;
 };
 
 const ChartTooltip = RechartsPrimitive.Tooltip;
