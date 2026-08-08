@@ -1,0 +1,225 @@
+{
+  "version": 1,
+  "sdk_version": "0.26.1",
+  "path": "/mcp",
+  "auth": {
+    "type": "none"
+  },
+  "mcp": {
+    "server": {
+      "name": "converthub-mcp",
+      "version": "0.1.0",
+      "title": "ConvertHub MCP"
+    },
+    "tools": [
+      {
+        "name": "list_unit_categories",
+        "title": "List unit categories",
+        "description": "List every supported unit category and the units available in each, for use with convert_unit.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {}
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "convert_unit",
+        "title": "Convert unit",
+        "description": "Convert a numeric value between two units within a category (length, weight, temperature, pressure, energy, power, and more).",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "category": {
+              "type": "string",
+              "description": "Category id, e.g. length, weight, temperature, pressure."
+            },
+            "value": {
+              "type": "number",
+              "description": "The numeric value to convert."
+            },
+            "from": {
+              "type": "string",
+              "description": "Source unit symbol or name, e.g. 'm' or 'Meter'."
+            },
+            "to": {
+              "type": "string",
+              "description": "Target unit symbol or name, e.g. 'ft' or 'Foot'."
+            }
+          },
+          "required": [
+            "category",
+            "value",
+            "from",
+            "to"
+          ],
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "convert_number_base",
+        "title": "Convert number base",
+        "description": "Convert an integer between binary, octal, decimal and hexadecimal representations.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string",
+              "description": "The number as text, e.g. '1010' or 'ff'."
+            },
+            "from": {
+              "type": "string",
+              "enum": [
+                "binary",
+                "octal",
+                "decimal",
+                "hexadecimal"
+              ],
+              "description": "Base of the input value."
+            },
+            "to": {
+              "type": "string",
+              "enum": [
+                "binary",
+                "octal",
+                "decimal",
+                "hexadecimal"
+              ],
+              "description": "Base of the output value."
+            }
+          },
+          "required": [
+            "value",
+            "from",
+            "to"
+          ],
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "base64",
+        "title": "Base64 encode / decode",
+        "description": "Encode text to Base64 or decode a Base64 string back to UTF-8 text.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "mode": {
+              "type": "string",
+              "enum": [
+                "encode",
+                "decode"
+              ],
+              "description": "Whether to encode or decode."
+            },
+            "text": {
+              "type": "string",
+              "minLength": 1,
+              "description": "The text or Base64 string to process."
+            }
+          },
+          "required": [
+            "mode",
+            "text"
+          ],
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "csv_json",
+        "title": "CSV / JSON convert",
+        "description": "Convert CSV text to a JSON array of objects, or JSON records to CSV text.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "mode": {
+              "type": "string",
+              "enum": [
+                "csv_to_json",
+                "json_to_csv"
+              ],
+              "description": "Direction of the conversion."
+            },
+            "text": {
+              "type": "string",
+              "minLength": 1,
+              "description": "The CSV or JSON source text."
+            }
+          },
+          "required": [
+            "mode",
+            "text"
+          ],
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "calculate",
+        "title": "Calculate expression",
+        "description": "Evaluate a scientific math expression (arithmetic, trigonometry, logarithms, powers, roots, constants like pi and e).",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "expression": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Expression to evaluate, e.g. 'sqrt(2) * sin(pi/4)'."
+            },
+            "angleUnit": {
+              "type": "string",
+              "enum": [
+                "rad",
+                "deg"
+              ],
+              "description": "Angle unit for trigonometric functions. Use 'rad' unless degrees are requested."
+            }
+          },
+          "required": [
+            "expression",
+            "angleUnit"
+          ],
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      }
+    ]
+  }
+}
