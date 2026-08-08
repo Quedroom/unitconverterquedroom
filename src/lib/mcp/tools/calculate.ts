@@ -2,22 +2,18 @@ import { defineTool } from "@lovable.dev/mcp-js";
 import { z } from "zod";
 import { create, all } from "mathjs";
 
-const math = create(all, {});
-// Remove unsafe evaluation entry points.
-math.import(
+const radMath = create(all, {});
+const degMath = create(all, {});
+
+const D = Math.PI / 180;
+degMath.import(
   {
-    import: function () {
-      throw new Error("Disabled");
-    },
-    createUnit: function () {
-      throw new Error("Disabled");
-    },
-    evaluate: function () {
-      throw new Error("Disabled");
-    },
-    parse: function () {
-      throw new Error("Disabled");
-    },
+    sin: (x: number) => Math.sin(x * D),
+    cos: (x: number) => Math.cos(x * D),
+    tan: (x: number) => Math.tan(x * D),
+    asin: (x: number) => Math.asin(x) / D,
+    acos: (x: number) => Math.acos(x) / D,
+    atan: (x: number) => Math.atan(x) / D,
   },
   { override: true },
 );
@@ -36,15 +32,10 @@ export default defineTool({
   annotations: { readOnlyHint: true, idempotentHint: true, openWorldHint: false },
   handler: ({ expression, angleUnit }: { expression: string; angleUnit: "rad" | "deg" }) => {
     try {
-      const expr =
-        angleUnit === "deg"
-          ? expression.replace(/\b(sin|cos|tan)\s*\(/g, "$1(pi/180*(") .replace(/\b(sin|cos|tan)\(pi\/180\*\(/g, "$1(pi/180*(")
-          : expression;
-      const balanced = angleUnit === "deg" ? balanceParens(expr) : expr;
-      const result = (math as unknown as { evaluate: (e: string) => unknown }).evaluate
-        ? math.parse(balanced).compile().evaluate()
-        : math.parse(balanced).compile().evaluate();
-      const text = math.format(result, { precision: 14 });
+      const engine = angleUnit === "deg" ? degMath : radMath;
+      const result = engine.evaluate(expression);
+      if (typeof result === "function") throw new Error("Expression must produce a value.");
+      const text = engine.format(result, { precision: 14 });
       return {
         content: [{ type: "text" as const, text: `${expression} = ${text}` }],
         structuredContent: { expression, angleUnit, result: text },
@@ -57,9 +48,3 @@ export default defineTool({
     }
   },
 });
-
-function balanceParens(expr: string) {
-  const open = (expr.match(/\(/g) ?? []).length;
-  const close = (expr.match(/\)/g) ?? []).length;
-  return expr + ")".repeat(Math.max(0, open - close));
-}
