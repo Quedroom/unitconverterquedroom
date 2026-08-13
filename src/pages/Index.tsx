@@ -1,213 +1,91 @@
-import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import Layout from "@/components/Layout";
-import FAQSection from "@/components/FAQSection";
-import SchemaMarkup from "@/components/SchemaMarkup";
-import { 
-  Calculator, 
-  Binary, 
-  Image, 
-  ArrowRight,
-  Shield,
-  Zap,
-  Lock,
-  FlaskConical,
-  Search
+import PageSEO from "@/components/PageSEO";
+import AdSlot from "@/components/AdSlot";
+import FaqBlock from "@/components/FaqBlock";
+import {
+  Ruler, Weight, Thermometer, Percent, Landmark, Type, ImageIcon, Binary, FlaskConical, Calculator, Shield, Zap, Lock,
 } from "lucide-react";
 
-const converterCategories = [
-  {
-    title: "Engineering Unit Converter",
-    description: "Convert length, weight, temperature, pressure, energy, power, torque, and more",
-    icon: Calculator,
-    path: "/unit",
-    features: ["18+ categories", "Real-time results", "Scientific precision"]
-  },
-  {
-    title: "Scientific Calculator",
-    description: "Advanced calculator with trigonometric, logarithmic, and scientific functions",
-    icon: FlaskConical,
-    path: "/calculator",
-    features: ["Trig functions", "Memory storage", "RAD/DEG modes"]
-  },
-  {
-    title: "Data Converter",
-    description: "Binary, decimal, hexadecimal, Base64, and CSV/JSON conversions",
-    icon: Binary,
-    path: "/data",
-    features: ["Text processing", "Copy to clipboard", "Format validation"]
-  },
-  {
-    title: "Media Converter",
-    description: "Convert images between JPG, PNG, and WebP formats instantly",
-    icon: Image,
-    path: "/media",
-    features: ["Drag & drop", "Fast processing", "Multiple formats"]
-  }
+const cards = [
+  { title: "Length Converter", desc: "cm to inch, meter to feet, km to mile", icon: Ruler, path: "/length-converter" },
+  { title: "Weight Converter", desc: "kg to lbs, grams, ounces, stones", icon: Weight, path: "/weight-converter" },
+  { title: "Temperature Converter", desc: "Celsius, Fahrenheit and Kelvin", icon: Thermometer, path: "/temperature-converter" },
+  { title: "Percentage Calculator", desc: "Percent of, discounts, increase & decrease", icon: Percent, path: "/percentage-calculator" },
+  { title: "EMI Calculator", desc: "Loan EMI, interest and total payment", icon: Landmark, path: "/emi-calculator" },
+  { title: "Word Counter", desc: "Words, characters and reading time", icon: Type, path: "/word-counter" },
+  { title: "Image Compressor", desc: "Compress JPG & PNG to 20–200 KB", icon: ImageIcon, path: "/image-compressor" },
+  { title: "Image Converter", desc: "JPG, PNG and WebP conversion", icon: ImageIcon, path: "/media" },
+  { title: "Data Converter", desc: "Base64, binary, hex, CSV & JSON", icon: Binary, path: "/data-converter" },
+  { title: "Scientific Calculator", desc: "Trigonometry, logs and powers", icon: FlaskConical, path: "/scientific-calculator" },
+  { title: "Engineering Units", desc: "Pressure, torque, energy, power & more", icon: Calculator, path: "/unit" },
 ];
 
-const Index = () => {
-  const [searchQuery, setSearchQuery] = useState("");
-  const searchInputRef = useRef<HTMLInputElement>(null);
+const faqs = [
+  { question: "Is ConvertHub really free?", answer: "Yes. Every converter and calculator is free with no sign-up, no download and no usage limit." },
+  { question: "Does ConvertHub store my data?", answer: "No. All conversions run in your browser. Nothing you type or upload is sent to a server, and we set no tracking cookies of our own." },
+  { question: "Which converters are available?", answer: "Length, weight, temperature, percentage, loan EMI, word count, image compression, image format conversion, data formats such as Base64 and hex, a scientific calculator, and 18+ engineering unit categories." },
+  { question: "Do the image tools upload my photos?", answer: "Never. Image compression and conversion use your browser's canvas, so photos stay on your device — the tools even work offline once loaded." },
+  { question: "Can I use ConvertHub on mobile?", answer: "Yes. The layout is fully responsive with large inputs, and image tools include a Choose File button because drag and drop does not work on phones." },
+];
 
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if ((e.ctrlKey || e.metaKey) && e.key === "k") {
-        e.preventDefault();
-        searchInputRef.current?.focus();
-      }
-      if (e.key === "/" && !["INPUT", "TEXTAREA"].includes((e.target as HTMLElement).tagName)) {
-        e.preventDefault();
-        searchInputRef.current?.focus();
-      }
-    };
+const Index = () => (
+  <Layout>
+    <PageSEO
+      title="ConvertHub – Free Everyday Converters & Calculators"
+      description="Free unit, finance, text and image converters. Convert length, weight, temperature, percentages, EMI and images instantly — 100% in your browser, no data stored."
+      path="/"
+      schemaData={{
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        name: "ConvertHub",
+        url: "https://unitconverterquedroom.lovable.app/",
+        description: "Simple, fast and private converters for students and creators.",
+      }}
+    />
 
-    document.addEventListener("keydown", handleKeyDown);
-    return () => document.removeEventListener("keydown", handleKeyDown);
-  }, []);
+    <section className="text-center py-8 md:py-14">
+      <p className="privacy-badge mb-4"><Shield className="w-3.5 h-3.5" /> 100% browser-based · No data stored</p>
+      <h1 className="text-3xl md:text-5xl font-bold mb-4 max-w-3xl mx-auto leading-tight">
+        All-in-One Unit &amp; Daily Life Converter
+      </h1>
+      <p className="text-base md:text-lg text-muted-foreground max-w-2xl mx-auto">
+        Convert length, weight, finance, text and images instantly — 100% in your browser
+      </p>
+      <div className="flex flex-wrap justify-center gap-6 mt-6 text-sm text-muted-foreground">
+        <span className="feature-pill"><Lock className="w-4 h-4 text-primary" /> No data stored</span>
+        <span className="feature-pill"><Zap className="w-4 h-4 text-primary" /> Instant results</span>
+        <span className="feature-pill"><Shield className="w-4 h-4 text-primary" /> No tracking</span>
+      </div>
+    </section>
 
-  const filteredCategories = converterCategories.filter((category) => {
-    const query = searchQuery.toLowerCase();
-    return (
-      category.title.toLowerCase().includes(query) ||
-      category.description.toLowerCase().includes(query) ||
-      category.features.some((f) => f.toLowerCase().includes(query))
-    );
-  });
+    {/* Ad Space Top - 728x90 */}
+    <AdSlot slot="top" />
 
-  return (
-    <Layout>
-      <SchemaMarkup />
-      {/* Hero Section */}
-      <section className="text-center py-12 md:py-20">
-        <div className="inline-flex items-center gap-2 bg-primary/10 border border-primary/30 rounded-full px-4 py-2 mb-6">
-          <Shield className="w-4 h-4 text-primary" />
-          <span className="text-sm text-primary font-medium">Privacy-First Engineering Tool</span>
-        </div>
-        
-        <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 max-w-4xl mx-auto leading-tight">
-          All-in-One Converter
-          <br />
-          <span className="text-primary">Zero Data Storage</span>
-        </h1>
-        
-        <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-8">
-          Free, fast and privacy-focused conversion tools. Convert units, data, and media 
-          instantly — all in your browser with zero data storage.
-        </p>
+    <section className="py-6">
+      <h2 className="text-2xl font-bold text-center mb-6">Choose a Converter</h2>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 max-w-5xl mx-auto">
+        {cards.map((c) => (
+          <Link key={c.path} to={c.path} className="converter-card">
+            <div className="converter-card-icon"><c.icon className="w-5 h-5" /></div>
+            <h3 className="text-lg font-semibold mb-1">{c.title}</h3>
+            <p className="text-sm text-muted-foreground">{c.desc}</p>
+          </Link>
+        ))}
+      </div>
+    </section>
 
-        {/* Search Bar */}
-        <div className="max-w-md mx-auto mb-8">
-          <div className="relative">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-            <input
-              ref={searchInputRef}
-              type="text"
-              placeholder="Search converters..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-12 pr-20 py-3 rounded-xl bg-card border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all"
-            />
-            <div className="absolute right-3 top-1/2 -translate-y-1/2 hidden sm:flex items-center gap-1">
-              <kbd className="px-2 py-1 text-xs font-mono bg-muted border border-border rounded text-muted-foreground">
-                Ctrl+K
-              </kbd>
-            </div>
-          </div>
-        </div>
+    <FaqBlock faqs={faqs} schemaId="schema-faq-home" />
 
-        <div className="flex flex-wrap justify-center gap-8 mb-12">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
-              <Lock className="w-4 h-4 text-primary" />
-            </div>
-            <span className="text-muted-foreground">No data stored</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
-              <Zap className="w-4 h-4 text-primary" />
-            </div>
-            <span className="text-muted-foreground">Instant results</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
-              <Shield className="w-4 h-4 text-primary" />
-            </div>
-            <span className="text-muted-foreground">No tracking</span>
-          </div>
-        </div>
-      </section>
-
-      {/* Converter Categories Grid */}
-      <section className="py-8">
-        <h2 className="text-2xl font-bold text-center mb-8">Choose a Converter</h2>
-        
-        {filteredCategories.length === 0 ? (
-          <div className="text-center text-muted-foreground py-12">
-            <p>No converters found matching "{searchQuery}"</p>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
-            {filteredCategories.map((category, index) => (
-              <Link
-                key={category.path}
-                to={category.path}
-                className="group converter-card animate-fade-in"
-                style={{ animationDelay: `${index * 100}ms` }}
-              >
-                <div className="converter-card-icon">
-                  <category.icon className="w-6 h-6" />
-                </div>
-                
-                <h3 className="text-xl font-semibold mb-2 group-hover:text-primary transition-colors">
-                  {category.title}
-                </h3>
-                
-                <p className="text-muted-foreground mb-4">
-                  {category.description}
-                </p>
-                
-                <div className="flex flex-wrap gap-2 mb-4">
-                  {category.features.map((feature) => (
-                    <span 
-                      key={feature}
-                      className="text-xs bg-secondary px-2 py-1 rounded-md text-muted-foreground"
-                    >
-                      {feature}
-                    </span>
-                  ))}
-                </div>
-                
-                <div className="flex items-center gap-2 text-primary font-medium">
-                  <span>Start Converting</span>
-                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                </div>
-              </Link>
-            ))}
-          </div>
-        )}
-      </section>
-
-      {/* FAQ Section */}
-      <FAQSection />
-
-      {/* Trust Section */}
-      <section className="py-16 text-center">
-        <div className="bg-card border border-border rounded-2xl p-8 max-w-3xl mx-auto">
-          <Shield className="w-12 h-12 text-primary mx-auto mb-4" />
-          <h2 className="text-2xl font-bold mb-4">Your Privacy is Our Priority</h2>
-          <p className="text-muted-foreground mb-6 max-w-xl mx-auto">
-            All conversions happen directly in your browser. We don't store, track, or log 
-            any of your data. No accounts, no cookies, no history.
-          </p>
-          <div className="inline-flex items-center gap-2 text-primary font-medium">
-            <Lock className="w-4 h-4" />
-            <span>Your data is never stored or saved</span>
-          </div>
-        </div>
-      </section>
-    </Layout>
-  );
-};
+    <section className="max-w-3xl mx-auto text-center tool-card my-10">
+      <Shield className="w-10 h-10 text-primary mx-auto mb-3" />
+      <h2 className="text-xl font-bold mb-2">Your privacy is the default</h2>
+      <p className="text-muted-foreground">
+        Every calculation happens on your device. No accounts, no uploads, no history on our servers — your data is
+        never stored or saved.
+      </p>
+    </section>
+  </Layout>
+);
 
 export default Index;
