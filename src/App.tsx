@@ -15,6 +15,9 @@ const WeightConverter = lazy(() => import("./pages/WeightConverter"));
 const TemperatureConverter = lazy(() => import("./pages/TemperatureConverter"));
 const PercentageCalculator = lazy(() => import("./pages/PercentageCalculator"));
 const EmiCalculator = lazy(() => import("./pages/EmiCalculator"));
+const SipCalculator = lazy(() => import("./pages/SipCalculator"));
+const AgeCalculator = lazy(() => import("./pages/AgeCalculator"));
+
 const WordCounter = lazy(() => import("./pages/WordCounter"));
 const ImageCompressor = lazy(() => import("./pages/ImageCompressor"));
 const About = lazy(() => import("./pages/About"));
@@ -41,6 +44,9 @@ const App = () => (
             <Route path="/temperature-converter" element={<TemperatureConverter />} />
             <Route path="/percentage-calculator" element={<PercentageCalculator />} />
             <Route path="/emi-calculator" element={<EmiCalculator />} />
+            <Route path="/sip-calculator" element={<SipCalculator />} />
+            <Route path="/age-calculator" element={<AgeCalculator />} />
+
             <Route path="/word-counter" element={<WordCounter />} />
             <Route path="/image-compressor" element={<ImageCompressor />} />
             <Route path="/scientific-calculator" element={<ScientificCalculator />} />
