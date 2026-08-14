@@ -89,32 +89,54 @@ const Layout = ({ children, breadcrumbs }: LayoutProps) => {
               </span>
             </Link>
 
-            <div className="relative flex-1 max-w-md mx-auto">
+            <div className="relative flex-1 max-w-md mx-auto" ref={boxRef}>
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <input
+                ref={inputRef}
                 type="search"
                 value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder="Search converters..."
-                aria-label="Search converters"
+                onChange={(e) => {
+                  setQuery(e.target.value);
+                  setOpen(true);
+                }}
+                onFocus={() => setOpen(true)}
+                onKeyDown={onSearchKeyDown}
+                placeholder="Search all tools... (Ctrl + K)"
+                aria-label="Search all converters and calculators"
+                role="combobox"
+                aria-expanded={open && query.trim().length > 0}
+                aria-controls="tool-search-results"
+                autoComplete="off"
                 className="w-full pl-9 pr-3 py-2 rounded-xl bg-muted border border-border text-sm focus:outline-none focus:ring-2 focus:ring-primary/40"
               />
-              {results.length > 0 && (
-                <ul className="absolute left-0 right-0 mt-2 bg-card border border-border rounded-xl shadow-[var(--shadow-card)] overflow-hidden z-50">
-                  {results.map((r) => (
-                    <li key={r.path}>
-                      <button
-                        onClick={() => go(r.path)}
-                        className="w-full text-left px-4 py-2.5 text-sm hover:bg-muted"
-                      >
-                        {r.name}
-                        <span className="text-muted-foreground text-xs ml-2">{r.category}</span>
-                      </button>
+              {open && query.trim().length > 0 && (
+                <ul
+                  id="tool-search-results"
+                  role="listbox"
+                  className="absolute left-0 right-0 mt-2 bg-card border border-border rounded-xl shadow-[var(--shadow-card)] overflow-hidden z-50 max-h-80 overflow-y-auto"
+                >
+                  {results.length === 0 ? (
+                    <li className="px-4 py-3 text-sm text-muted-foreground">
+                      No tool matches “{query}”. Try “kg”, “inch”, “percent” or “base64”.
                     </li>
-                  ))}
+                  ) : (
+                    results.map((r, i) => (
+                      <li key={r.path} role="option" aria-selected={i === active}>
+                        <button
+                          onMouseEnter={() => setActive(i)}
+                          onClick={() => go(r.path)}
+                          className={`w-full text-left px-4 py-2.5 text-sm ${i === active ? "bg-muted" : ""}`}
+                        >
+                          {r.name}
+                          <span className="text-muted-foreground text-xs ml-2">{r.category}</span>
+                        </button>
+                      </li>
+                    ))
+                  )}
                 </ul>
               )}
             </div>
+
 
             <button
               className="md:hidden p-2 text-muted-foreground"
