@@ -1,7 +1,9 @@
 import Layout, { Crumb } from "@/components/Layout";
 import PageSEO from "@/components/PageSEO";
 import AdSlot from "@/components/AdSlot";
+import RelatedTools from "@/components/RelatedTools";
 import FaqBlock, { Faq } from "@/components/FaqBlock";
+
 
 interface ToolPageProps {
   title: string;
@@ -51,6 +53,9 @@ const ToolPage = ({ title, description, path, h1, intro, crumbs, faqs, tool, chi
         <article className="prose-seo max-w-3xl mx-auto">{children}</article>
 
         <FaqBlock faqs={faqs} schemaId={`schema-faq-${path.replace(/\//g, "")}`} />
+
+        <RelatedTools path={path} />
+
       </div>
 
       {/* Ad Space Sidebar - 300x600 sticky */}
