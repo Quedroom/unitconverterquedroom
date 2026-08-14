@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Search, Shield, Menu as MenuIcon, X, ChevronRight } from "lucide-react";
-import { tools, menu } from "@/data/tools";
+import { Search, Shield, Menu as MenuIcon, ChevronRight } from "lucide-react";
+import { tools, menu, searchTools } from "@/data/tools";
 
 export interface Crumb {
   label: string;
@@ -20,19 +20,59 @@ const Layout = ({ children, breadcrumbs }: LayoutProps) => {
   const location = useLocation();
   const navigate = useNavigate();
   const [query, setQuery] = useState("");
+  const [open, setOpen] = useState(false);
+  const [active, setActive] = useState(0);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const boxRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
-  const results = query.trim()
-    ? tools.filter((t) =>
-        `${t.name} ${t.keywords} ${t.category}`.toLowerCase().includes(query.trim().toLowerCase())
-      ).slice(0, 6)
-    : [];
+  const results = searchTools(query, 8);
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      const el = document.activeElement as HTMLElement | null;
+      const typing = el && (el.tagName === "INPUT" || el.tagName === "TEXTAREA" || el.isContentEditable);
+      if ((e.key === "k" && (e.metaKey || e.ctrlKey)) || (e.key === "/" && !typing)) {
+        e.preventDefault();
+        inputRef.current?.focus();
+      }
+    };
+    const onClick = (e: MouseEvent) => {
+      if (boxRef.current && !boxRef.current.contains(e.target as Node)) setOpen(false);
+    };
+    window.addEventListener("keydown", onKey);
+    document.addEventListener("mousedown", onClick);
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      document.removeEventListener("mousedown", onClick);
+    };
+  }, []);
+
+  useEffect(() => setActive(0), [query]);
 
   const go = (path: string) => {
     setQuery("");
+    setOpen(false);
     setMobileOpen(false);
     navigate(path);
   };
+
+  const onSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (!results.length) return;
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      setActive((i) => (i + 1) % results.length);
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      setActive((i) => (i - 1 + results.length) % results.length);
+    } else if (e.key === "Enter") {
+      e.preventDefault();
+      go(results[active].path);
+    } else if (e.key === "Escape") {
+      setOpen(false);
+    }
+  };
+
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
