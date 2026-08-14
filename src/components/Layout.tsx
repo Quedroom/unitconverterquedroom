@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Search, Shield, Menu as MenuIcon, ChevronRight } from "lucide-react";
-import { tools, menu, searchTools } from "@/data/tools";
+import { menu, searchTools } from "@/data/tools";
 
 export interface Crumb {
   label: string;
