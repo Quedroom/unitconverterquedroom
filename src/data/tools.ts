@@ -25,20 +25,21 @@ export const tools: ToolLink[] = [
 ];
 
 /** High-intent search phrases surfaced on the homepage. */
-export const popularSearches: { label: string; path: string }[] = [
-  { label: "cm to inch", path: "/length-converter" },
-  { label: "kg to lbs", path: "/weight-converter" },
-  { label: "C to F", path: "/temperature-converter" },
-  { label: "% calculator", path: "/percentage-calculator" },
-  { label: "EMI calculator", path: "/emi-calculator" },
-  { label: "Word Counter", path: "/word-counter" },
-  { label: "JPG to PNG", path: "/media" },
-  { label: "Image Compressor", path: "/image-compressor" },
-  { label: "Age Calculator", path: "/age-calculator" },
-  { label: "Binary to Text", path: "/data-converter" },
-  { label: "SIP Calculator", path: "/sip-calculator" },
-  { label: "Bigha to Sqft", path: "/blog/bigha-to-square-feet-assam" },
+export const popularSearches: { label: string; path: string; title: string }[] = [
+  { label: "cm to inch", path: "/length-converter", title: "Convert cm to inch with the Length Converter" },
+  { label: "kg to lbs", path: "/weight-converter", title: "Convert kg to lbs with the Weight Converter" },
+  { label: "C to F", path: "/temperature-converter", title: "Convert Celsius to Fahrenheit with the Temperature Converter" },
+  { label: "% calculator", path: "/percentage-calculator", title: "Work out percentages with the Percentage Calculator" },
+  { label: "EMI calculator", path: "/emi-calculator", title: "Calculate loan EMI with the EMI Calculator" },
+  { label: "Word Counter", path: "/word-counter", title: "Count words and characters with the Word Counter" },
+  { label: "JPG to PNG", path: "/media", title: "Convert JPG to PNG with the Image Converter" },
+  { label: "Image Compressor", path: "/image-compressor", title: "Compress JPG and PNG images to 20–200 KB" },
+  { label: "Age Calculator", path: "/age-calculator", title: "Find your exact age with the Age Calculator" },
+  { label: "Binary to Text", path: "/data-converter", title: "Convert binary to text with the Data Converter" },
+  { label: "SIP Calculator", path: "/sip-calculator", title: "Estimate mutual fund returns with the SIP Calculator" },
+  { label: "Bigha to Sqft", path: "/blog/bigha-to-square-feet-assam", title: "Read the Bigha to Square Feet conversion guide for Assam" },
 ];
+
 
 export const menu = [
   { label: "Length", path: "/length-converter" },
