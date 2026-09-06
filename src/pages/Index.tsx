@@ -78,6 +78,8 @@ const Index = () => (
           <Link
             key={s.label}
             to={s.path}
+            title={s.title}
+            aria-label={s.title}
             className="px-4 py-2 rounded-full border border-border bg-card text-sm font-medium text-foreground hover:border-primary/50 hover:text-primary transition-colors"
           >
             {s.label}
