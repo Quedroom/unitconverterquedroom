@@ -19,6 +19,7 @@ const SipCalculator = lazy(() => import("./pages/SipCalculator"));
 const AgeCalculator = lazy(() => import("./pages/AgeCalculator"));
 
 const WordCounter = lazy(() => import("./pages/WordCounter"));
+const PdfToWord = lazy(() => import("./pages/PdfToWord"));
 const ImageCompressor = lazy(() => import("./pages/ImageCompressor"));
 const About = lazy(() => import("./pages/About"));
 const Contact = lazy(() => import("./pages/Contact"));
@@ -48,6 +49,7 @@ const App = () => (
             <Route path="/age-calculator" element={<AgeCalculator />} />
 
             <Route path="/word-counter" element={<WordCounter />} />
+            <Route path="/pdf-to-word" element={<PdfToWord />} />
             <Route path="/image-compressor" element={<ImageCompressor />} />
             <Route path="/scientific-calculator" element={<ScientificCalculator />} />
             <Route path="/data-converter" element={<DataConverter />} />

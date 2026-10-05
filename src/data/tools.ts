@@ -17,6 +17,7 @@ export const tools: ToolLink[] = [
   { name: "SIP Calculator", path: "/sip-calculator", category: "Finance", keywords: "sip mutual fund investment returns monthly compounding", popular: true, desc: "Monthly SIP returns and maturity value" },
   { name: "Age Calculator", path: "/age-calculator", category: "Finance", keywords: "age calculator date of birth dob years months days", popular: true, desc: "Exact age in years, months and days" },
   { name: "Word Counter", path: "/word-counter", category: "Text Tools", keywords: "word character count text reading time", popular: true, desc: "Words, characters and reading time" },
+  { name: "PDF to Word Converter", path: "/pdf-to-word", category: "Text Tools", keywords: "pdf to word docx convert pdf document editable", desc: "Convert PDF to editable .docx" },
   { name: "Image Compressor", path: "/image-compressor", category: "Image Tools", keywords: "compress image jpg png 20kb 50kb 100kb 200kb", desc: "Compress JPG & PNG to 20–200 KB" },
   { name: "Image Converter", path: "/media", category: "Image Tools", keywords: "jpg png webp convert image media", desc: "JPG, PNG and WebP conversion" },
   { name: "Data Converter", path: "/data-converter", category: "Text Tools", keywords: "base64 binary hex csv json data binary to text", desc: "Base64, binary, hex, CSV & JSON" },
