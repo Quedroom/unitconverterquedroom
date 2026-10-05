@@ -7,9 +7,9 @@
   },
   "mcp": {
     "server": {
-      "name": "converthub-mcp",
+      "name": "swift-convert-48",
       "version": "0.1.0",
-      "title": "ConvertHub MCP"
+      "title": "Swift Convert (48)"
     },
     "tools": [
       {
