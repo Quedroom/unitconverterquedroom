@@ -426,8 +426,8 @@ var calculate_default = defineTool6({
 
 // src/lib/mcp/index.ts
 var mcp_default = defineMcp({
-  name: "converthub-mcp",
-  title: "ConvertHub MCP",
+  name: "swift-convert-48",
+  title: "Swift Convert (48)",
   version: "0.1.0",
   instructions: "Privacy-first conversion tools from ConvertHub. Use `list_unit_categories` to discover categories, `convert_unit` for engineering unit conversions, `convert_number_base` for binary/hex/decimal, `base64` for encoding, `csv_json` for data format conversion, and `calculate` to evaluate math expressions. All tools are stateless and store no data.",
   tools: [
