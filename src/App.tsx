@@ -20,6 +20,7 @@ const AgeCalculator = lazy(() => import("./pages/AgeCalculator"));
 
 const WordCounter = lazy(() => import("./pages/WordCounter"));
 const PdfToWord = lazy(() => import("./pages/PdfToWord"));
+const AiTextToWord = lazy(() => import("./pages/AiTextToWord"));
 const ImageCompressor = lazy(() => import("./pages/ImageCompressor"));
 const About = lazy(() => import("./pages/About"));
 const Contact = lazy(() => import("./pages/Contact"));
@@ -50,6 +51,7 @@ const App = () => (
 
             <Route path="/word-counter" element={<WordCounter />} />
             <Route path="/pdf-to-word" element={<PdfToWord />} />
+            <Route path="/ai-text-to-word" element={<AiTextToWord />} />
             <Route path="/image-compressor" element={<ImageCompressor />} />
             <Route path="/scientific-calculator" element={<ScientificCalculator />} />
             <Route path="/data-converter" element={<DataConverter />} />
