@@ -21,6 +21,7 @@ const AgeCalculator = lazy(() => import("./pages/AgeCalculator"));
 const WordCounter = lazy(() => import("./pages/WordCounter"));
 const PdfToWord = lazy(() => import("./pages/PdfToWord"));
 const AiTextToWord = lazy(() => import("./pages/AiTextToWord"));
+const Pro = lazy(() => import("./pages/Pro"));
 const ImageCompressor = lazy(() => import("./pages/ImageCompressor"));
 const About = lazy(() => import("./pages/About"));
 const Contact = lazy(() => import("./pages/Contact"));
@@ -60,6 +61,7 @@ const App = () => (
             <Route path="/media" element={<MediaConverter />} />
             <Route path="/blog" element={<Blog />} />
             <Route path="/blog/:slug" element={<BlogPost />} />
+            <Route path="/pro" element={<Pro />} />
             <Route path="/about" element={<About />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/privacy-policy" element={<PrivacyPolicy />} />
