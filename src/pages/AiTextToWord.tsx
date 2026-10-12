@@ -2,8 +2,7 @@ import { useState } from "react";
 import { Sparkles, Download, Loader2, Info } from "lucide-react";
 import ToolPage from "@/components/ToolPage";
 import { supabase } from "@/integrations/supabase/client";
-
-const MAX = 30000;
+import { usePro } from "@/hooks/usePro";
 
 const faqs = [
   { question: "Is my text sent anywhere?", answer: "Yes. Unlike our other tools, this one sends your pasted text to Lovable AI for processing so it can be organised. It is not saved by ConvertHub. Do not paste passwords or highly sensitive information." },
@@ -50,6 +49,8 @@ const preview: Record<Block["kind"], string> = {
 };
 
 const AiTextToWord = () => {
+  const { isPro, code, limits } = usePro();
+  const MAX = limits.aiChars;
   const [input, setInput] = useState("");
   const [doc, setDoc] = useState("");
   const [busy, setBusy] = useState(false);
@@ -59,7 +60,7 @@ const AiTextToWord = () => {
   const organize = async () => {
     setBusy(true); setError("");
     try {
-      const { data, error } = await supabase.functions.invoke("organize-document", { body: { text: input } });
+      const { data, error } = await supabase.functions.invoke("organize-document", { body: { text: input, proCode: isPro ? code : undefined } });
       if (error) {
         let msg = "Could not organise the text. Please try again.";
         try { msg = (await (error as { context?: Response }).context?.json())?.error ?? msg; } catch { /* keep */ }
@@ -113,7 +114,7 @@ const AiTextToWord = () => {
             rows={9} placeholder="e.g. meeting notes, rough essay draft, list of points…"
             className="w-full rounded-2xl border border-input bg-background p-4 text-base"
           />
-          <p className="text-xs text-muted-foreground">{input.length.toLocaleString()} / {MAX.toLocaleString()} characters</p>
+          <p className="text-xs text-muted-foreground">{input.length.toLocaleString()} / {MAX.toLocaleString()} characters{isPro ? " (Pro)" : <> · <a href="/pro" className="text-primary underline">Pro allows 100,000</a></>}</p>
 
           <label className="flex items-start gap-2 text-sm">
             <input type="checkbox" checked={consent} onChange={(e) => setConsent(e.target.checked)} className="mt-1" />

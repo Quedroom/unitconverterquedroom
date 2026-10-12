@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import { Upload, Download, ImageIcon, X } from "lucide-react";
 import ToolPage from "@/components/ToolPage";
+import { usePro } from "@/hooks/usePro";
 
 const faqs = [
   { question: "How do I compress a JPG to 50 KB?", answer: "Upload the image, choose the 50 KB target size and press Compress. The tool repeatedly lowers JPEG quality (and scales the image if needed) until the file fits under the target." },
@@ -12,6 +13,8 @@ const faqs = [
 const targets = [20, 50, 100, 200];
 
 const ImageCompressor = () => {
+  const { isPro, limits } = usePro();
+  const [sizeError, setSizeError] = useState("");
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [target, setTarget] = useState(100);
@@ -23,6 +26,11 @@ const ImageCompressor = () => {
 
   const pick = (f: File) => {
     if (!f.type.startsWith("image/")) return;
+    setSizeError("");
+    if (f.size > limits.fileMB * 1024 * 1024) {
+      setSizeError(`This image is over ${limits.fileMB} MB.${isPro ? "" : " ConvertHub Pro allows up to 50 MB."}`);
+      return;
+    }
     if (preview) URL.revokeObjectURL(preview);
     if (output) URL.revokeObjectURL(output.url);
     setOutput(null);
@@ -106,6 +114,7 @@ const ImageCompressor = () => {
               accept="image/*"
               className="hidden"
               onChange={(e) => { const f = e.target.files?.[0]; if (f) pick(f); }}
+              data-max-mb={limits.fileMB}
             />
           </div>
 
