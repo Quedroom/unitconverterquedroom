@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import { FileText, Upload, Download, Loader2 } from "lucide-react";
 import ToolPage from "@/components/ToolPage";
+import { usePro } from "@/hooks/usePro";
 
 const faqs = [
   { question: "Is my PDF uploaded to a server?", answer: "No. The PDF is read and converted entirely inside your browser. The file never leaves your device and nothing is stored." },
@@ -74,6 +75,7 @@ async function buildDocx(pages: Line[][]) {
 }
 
 const PdfToWord = () => {
+  const { isPro, limits } = usePro();
   const inputRef = useRef<HTMLInputElement>(null);
   const [file, setFile] = useState<File | null>(null);
   const [drag, setDrag] = useState(false);
@@ -86,6 +88,7 @@ const PdfToWord = () => {
     setError(""); setResult(null);
     if (!f) return;
     if (f.type !== "application/pdf" && !f.name.toLowerCase().endsWith(".pdf")) return setError("Please choose a PDF file.");
+    if (f.size > limits.fileMB * 1024 * 1024) return setError(`This PDF is over ${limits.fileMB} MB.${isPro ? "" : " ConvertHub Pro allows up to 50 MB."}`);
     setFile(f);
   };
 

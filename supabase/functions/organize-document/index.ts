@@ -1,5 +1,6 @@
 import { createOpenAI } from "npm:@ai-sdk/openai@2";
 import { streamText } from "npm:ai@5";
+import { isValidProCode } from "../_shared/pro.ts";
 import { createLovableAiGatewayRunIdFetch, getLovableAiGatewayRunId } from "../_shared/run-id.ts";
 
 const cors = {
@@ -19,7 +20,8 @@ Rules:
   "- " bullet item, "1. " numbered item, and plain lines for paragraphs.
 - Separate blocks with a blank line. Use the same language as the input.`;
 
-const MAX_CHARS = 30000;
+const FREE_CHARS = 30000;
+const PRO_CHARS = 100000;
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: cors });
@@ -29,13 +31,17 @@ Deno.serve(async (req) => {
   if (!apiKey) return json({ error: "AI is not configured for this site." }, 500);
 
   let text = "";
+  let proCode: unknown;
   try {
-    text = String((await req.json())?.text ?? "").trim();
+    const body = await req.json();
+    text = String(body?.text ?? "").trim();
+    proCode = body?.proCode;
   } catch {
     return json({ error: "Invalid request." }, 400);
   }
   if (!text) return json({ error: "Please paste some text first." }, 400);
-  if (text.length > MAX_CHARS) return json({ error: `Text is too long (max ${MAX_CHARS.toLocaleString()} characters).` }, 400);
+  const MAX_CHARS = text.length > FREE_CHARS && (await isValidProCode(proCode)) ? PRO_CHARS : FREE_CHARS;
+  if (text.length > MAX_CHARS) return json({ error: `Text is too long (max ${MAX_CHARS.toLocaleString()} characters${MAX_CHARS === FREE_CHARS ? " — Pro allows 100,000" : ""}).` }, 400);
 
   const runIdFetch = createLovableAiGatewayRunIdFetch(getLovableAiGatewayRunId(req));
   const provider = createOpenAI({

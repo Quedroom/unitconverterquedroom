@@ -1,3 +1,5 @@
+import { usePro } from "@/hooks/usePro";
+
 interface AdSlotProps {
   slot: "top" | "below-tool" | "sidebar";
   className?: string;
@@ -9,18 +11,17 @@ const config = {
   sidebar: { label: "Ad Space Sidebar - 300x600 sticky", className: "min-h-[600px] w-[300px] sticky top-28" },
 } as const;
 
-/** Reserved, empty containers for future AdSense units. */
+/** Reserved, empty containers for future AdSense units. Hidden for Pro users. */
 const AdSlot = ({ slot, className = "" }: AdSlotProps) => {
+  const { isPro } = usePro();
+  if (isPro) return null;
   const c = config[slot];
   return (
-    <>
-      {/* Ad Space: {c.label} */}
-      <div
-        data-ad-slot={slot}
-        aria-hidden="true"
-        className={`${c.className} ${className} my-6 rounded-xl border border-dashed border-border bg-muted/40`}
-      />
-    </>
+    <div
+      data-ad-slot={slot}
+      aria-hidden="true"
+      className={`${c.className} ${className} my-6 rounded-xl border border-dashed border-border bg-muted/40`}
+    />
   );
 };
 

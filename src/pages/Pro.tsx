@@ -3,6 +3,7 @@ import { Check, Sparkles, Ban, FileText, Zap, Shield } from "lucide-react";
 import Layout from "@/components/Layout";
 import PageSEO from "@/components/PageSEO";
 import FaqBlock from "@/components/FaqBlock";
+import { usePro, activatePro, deactivatePro } from "@/hooks/usePro";
 
 // Paddle checkout is connected once the workspace is on a paid plan.
 // Until then the signup button opens a waitlist email.
@@ -15,8 +16,8 @@ const plans = {
 
 const features = [
   { icon: Ban, title: "No ads", text: "A clean, distraction-free ConvertHub on every page." },
-  { icon: Sparkles, title: "More AI Text to Word", text: "Higher daily limits for organising notes into Word documents." },
-  { icon: FileText, title: "Bigger files", text: "Convert larger PDFs and compress more images at once." },
+  { icon: Sparkles, title: "More AI Text to Word", text: "Paste up to 100,000 characters (free: 30,000)." },
+  { icon: FileText, title: "Bigger files", text: "Upload PDFs and images up to 50 MB (free: 10 MB)." },
   { icon: Zap, title: "Early access", text: "Try new converters and calculators before everyone else." },
   { icon: Shield, title: "Same privacy promise", text: "Your files and calculations still stay in your browser." },
 ];
@@ -30,6 +31,17 @@ const faqs = [
 const Pro = () => {
   const [cycle, setCycle] = useState<"monthly" | "yearly">("yearly");
   const plan = plans[cycle];
+  const { isPro } = usePro();
+  const [codeInput, setCodeInput] = useState("");
+  const [codeMsg, setCodeMsg] = useState("");
+  const [checking, setChecking] = useState(false);
+  const submitCode = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setChecking(true); setCodeMsg("");
+    const ok = await activatePro(codeInput).catch(() => false);
+    setChecking(false);
+    setCodeMsg(ok ? "Pro unlocked on this device. Enjoy!" : "That code isn't valid. Check it and try again.");
+  };
 
   const signup = () => {
     if (!PADDLE_READY) {
@@ -86,6 +98,24 @@ const Pro = () => {
           {!PADDLE_READY && <p className="text-xs text-muted-foreground mt-2 text-center">Checkout opens soon. Join the waitlist and we'll email you first.</p>}
         </div>
       </div>
+
+      <section className="tool-card max-w-xl mx-auto mt-10" aria-labelledby="pro-code">
+        <h2 id="pro-code" className="text-lg font-semibold mb-2">Already have a Pro code?</h2>
+        {isPro ? (
+          <div className="flex flex-wrap items-center gap-3">
+            <span className="privacy-badge"><Check className="w-3.5 h-3.5" /> Pro is active on this device</span>
+            <button onClick={deactivatePro} className="btn-secondary">Remove code</button>
+          </div>
+        ) : (
+          <form onSubmit={submitCode} className="flex flex-wrap gap-3">
+            <label htmlFor="pro-code-input" className="sr-only">Pro code</label>
+            <input id="pro-code-input" value={codeInput} onChange={(e) => setCodeInput(e.target.value)} placeholder="CHPRO-XXXXXXXX"
+              className="flex-1 min-w-[200px] rounded-xl border border-input bg-background px-4 py-3 font-mono uppercase" />
+            <button type="submit" disabled={!codeInput.trim() || checking} className="btn-primary">{checking ? "Checking…" : "Unlock Pro"}</button>
+          </form>
+        )}
+        {codeMsg && <p className="text-sm mt-3" role="status">{codeMsg}</p>}
+      </section>
 
       <section className="max-w-4xl mx-auto mt-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {features.map((f) => (
