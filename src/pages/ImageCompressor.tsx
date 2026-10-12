@@ -114,9 +114,11 @@ const ImageCompressor = () => {
               accept="image/*"
               className="hidden"
               onChange={(e) => { const f = e.target.files?.[0]; if (f) pick(f); }}
-              data-max-mb={limits.fileMB}
             />
+            <p className="text-xs text-muted-foreground mt-3">Max {limits.fileMB} MB{isPro ? " (Pro)" : ""}</p>
           </div>
+          {sizeError && <p className="text-sm text-destructive mt-3" role="alert">{sizeError}</p>}
+
 
           {file && (
             <div className="mt-6 space-y-5">
