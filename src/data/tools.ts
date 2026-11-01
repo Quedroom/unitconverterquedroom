@@ -43,12 +43,13 @@ export const popularSearches: { label: string; path: string; title: string }[] =
   { label: "Age Calculator", path: "/age-calculator", title: "Find your exact age with the Age Calculator" },
   { label: "Binary to Text", path: "/data-converter", title: "Convert binary to text with the Data Converter" },
   { label: "SIP Calculator", path: "/sip-calculator", title: "Estimate mutual fund returns with the SIP Calculator" },
-  { label: "Bigha to Sqft", path: "/blog/bigha-to-square-feet-assam", title: "Read the Bigha to Square Feet conversion guide for Assam" },
+  { label: "Bigha to Sqft", path: "/area-converter", title: "Convert Bigha to Square Feet with the Area Converter" },
 ];
 
 
 export const menu = [
   { label: "Length", path: "/length-converter" },
+  { label: "Area", path: "/area-converter" },
   { label: "Weight", path: "/weight-converter" },
   { label: "Temp", path: "/temperature-converter" },
   { label: "Finance", path: "/emi-calculator" },
