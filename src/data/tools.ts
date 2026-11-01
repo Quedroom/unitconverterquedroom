@@ -10,6 +10,10 @@ export interface ToolLink {
 
 export const tools: ToolLink[] = [
   { name: "Length Converter", path: "/length-converter", category: "Length", keywords: "cm inch meter feet km mile length centimeter", popular: true, desc: "cm to inch, meter to feet, km to mile" },
+  { name: "Area Converter", path: "/area-converter", category: "Area", keywords: "area bigha katha lecha acre hectare square feet sq meter land", desc: "Bigha, katha, acre, hectare & sq ft" },
+  { name: "Volume Converter", path: "/volume-converter", category: "Volume", keywords: "volume liter gallon cup ml tablespoon teaspoon pint cooking", desc: "Liters, gallons, cups & cooking units" },
+  { name: "Speed Converter", path: "/speed-converter", category: "Speed", keywords: "speed kmh mph knot m/s velocity pace", desc: "km/h, mph, m/s and knots" },
+  { name: "Time Converter", path: "/time-converter", category: "Time", keywords: "time hours minutes seconds days weeks years duration", desc: "Seconds, minutes, hours, days & years" },
   { name: "Weight Converter", path: "/weight-converter", category: "Weight", keywords: "kg lbs pound gram mass weight ounce stone", popular: true, desc: "kg to lbs, grams, ounces, stones" },
   { name: "Temperature Converter", path: "/temperature-converter", category: "Temperature", keywords: "celsius fahrenheit kelvin temp c to f", popular: true, desc: "Celsius, Fahrenheit and Kelvin" },
   { name: "Percentage Calculator", path: "/percentage-calculator", category: "Finance", keywords: "percent percentage increase discount marks", popular: true, desc: "Percent of, discounts, increase & decrease" },
@@ -39,12 +43,13 @@ export const popularSearches: { label: string; path: string; title: string }[] =
   { label: "Age Calculator", path: "/age-calculator", title: "Find your exact age with the Age Calculator" },
   { label: "Binary to Text", path: "/data-converter", title: "Convert binary to text with the Data Converter" },
   { label: "SIP Calculator", path: "/sip-calculator", title: "Estimate mutual fund returns with the SIP Calculator" },
-  { label: "Bigha to Sqft", path: "/blog/bigha-to-square-feet-assam", title: "Read the Bigha to Square Feet conversion guide for Assam" },
+  { label: "Bigha to Sqft", path: "/area-converter", title: "Convert Bigha to Square Feet with the Area Converter" },
 ];
 
 
 export const menu = [
   { label: "Length", path: "/length-converter" },
+  { label: "Area", path: "/area-converter" },
   { label: "Weight", path: "/weight-converter" },
   { label: "Temp", path: "/temperature-converter" },
   { label: "Finance", path: "/emi-calculator" },

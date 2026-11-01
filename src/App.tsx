@@ -11,6 +11,10 @@ const DataConverter = lazy(() => import("./pages/DataConverter"));
 const MediaConverter = lazy(() => import("./pages/MediaConverter"));
 const ScientificCalculator = lazy(() => import("./pages/ScientificCalculator"));
 const LengthConverter = lazy(() => import("./pages/LengthConverter"));
+const AreaConverter = lazy(() => import("./pages/AreaConverter"));
+const VolumeConverter = lazy(() => import("./pages/VolumeConverter"));
+const SpeedConverter = lazy(() => import("./pages/SpeedConverter"));
+const TimeConverter = lazy(() => import("./pages/TimeConverter"));
 const WeightConverter = lazy(() => import("./pages/WeightConverter"));
 const TemperatureConverter = lazy(() => import("./pages/TemperatureConverter"));
 const PercentageCalculator = lazy(() => import("./pages/PercentageCalculator"));
@@ -43,6 +47,10 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/length-converter" element={<LengthConverter />} />
+            <Route path="/area-converter" element={<AreaConverter />} />
+            <Route path="/volume-converter" element={<VolumeConverter />} />
+            <Route path="/speed-converter" element={<SpeedConverter />} />
+            <Route path="/time-converter" element={<TimeConverter />} />
             <Route path="/weight-converter" element={<WeightConverter />} />
             <Route path="/temperature-converter" element={<TemperatureConverter />} />
             <Route path="/percentage-calculator" element={<PercentageCalculator />} />
