@@ -1,0 +1,1 @@
+- Build additional standalone converter pages as lazy-loaded routes that reuse shared tool primitives and are added to the tool registry and sitemap, keeping calculations client-side.

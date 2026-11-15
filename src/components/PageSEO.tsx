@@ -23,7 +23,7 @@ const PageSEO = ({ title, description, path, schemaData }: PageSEOProps) => {
     };
 
     setMeta("description", description);
-    setMeta("og:title", description, "property");
+    setMeta("og:title", title, "property");
     setMeta("og:description", description, "property");
     setMeta("og:url", `https://unitconverterquedroom.lovable.app${path}`, "property");
     setMeta("twitter:title", title);
