@@ -8,6 +8,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 const Index = lazy(() => import("./pages/Index"));
 const EngineeringUnitConverter = lazy(() => import("./pages/EngineeringUnitConverter"));
 const DataConverter = lazy(() => import("./pages/DataConverter"));
+const DigitalDataConverter = lazy(() => import("./pages/DigitalDataConverter"));
 const MediaConverter = lazy(() => import("./pages/MediaConverter"));
 const ScientificCalculator = lazy(() => import("./pages/ScientificCalculator"));
 const LengthConverter = lazy(() => import("./pages/LengthConverter"));
@@ -64,6 +65,7 @@ const App = () => (
             <Route path="/image-compressor" element={<ImageCompressor />} />
             <Route path="/scientific-calculator" element={<ScientificCalculator />} />
             <Route path="/data-converter" element={<DataConverter />} />
+            <Route path="/digital-data-converter" element={<DigitalDataConverter />} />
             <Route path="/unit" element={<EngineeringUnitConverter />} />
             <Route path="/engineering" element={<EngineeringUnitConverter />} />
             <Route path="/media" element={<MediaConverter />} />

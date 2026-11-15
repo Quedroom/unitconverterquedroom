@@ -26,6 +26,7 @@ export const tools: ToolLink[] = [
   { name: "Image Compressor", path: "/image-compressor", category: "Image Tools", keywords: "compress image jpg png 20kb 50kb 100kb 200kb", desc: "Compress JPG & PNG to 20–200 KB" },
   { name: "Image Converter", path: "/media", category: "Image Tools", keywords: "jpg png webp convert image media", desc: "JPG, PNG and WebP conversion" },
   { name: "Data Converter", path: "/data-converter", category: "Text Tools", keywords: "base64 binary hex csv json data binary to text", desc: "Base64, binary, hex, CSV & JSON" },
+  { name: "Digital Data Converter", path: "/digital-data-converter", category: "Text Tools", keywords: "bits bytes KB MB GB TB KiB MiB GiB file size digital storage data size", desc: "Convert bits, bytes, KB, MB, GB & binary units" },
   { name: "Scientific Calculator", path: "/scientific-calculator", category: "Finance", keywords: "scientific calculator trig log math", desc: "Trigonometry, logs and powers" },
   { name: "Engineering Unit Converter", path: "/unit", category: "Length", keywords: "engineering pressure torque energy power units area volume", desc: "Pressure, torque, energy, power & more" },
 ];
